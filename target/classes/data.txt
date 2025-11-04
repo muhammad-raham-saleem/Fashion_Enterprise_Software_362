@@ -1,3 +1,0 @@
-[SKETCHES]
-art,winter,true
-[MATERIALS]

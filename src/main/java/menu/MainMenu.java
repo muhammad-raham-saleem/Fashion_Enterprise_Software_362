@@ -1,6 +1,7 @@
 package menu;
 
 import model.DesignRepository;
+import model.Inventory;
 import service.*;
 import util.FileManager;
 
@@ -15,6 +16,10 @@ public class MainMenu {
     private final MaterialService materialService = new MaterialService(designRepo, sc);
     private final ManufacturingService manufacturingService = new ManufacturingService(designRepo);
     private final CostService costService = new CostService(designRepo, sc);
+    private final Inventory inventory = new Inventory("inventory.txt");
+    private final FinanceService financeService = new FinanceService("finiance.txt");
+    private final SaleService saleService = new SaleService(inventory, financeService);
+    
 
     public void start() {
         // Load data before menus
@@ -38,7 +43,7 @@ public class MainMenu {
             switch (choice) {
                 case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
                 case 2 -> new WarehouseMenu(sc).start();
-                case 3 -> new SalesMenu(sc).start();
+                case 3 -> new SalesMenu(sc, saleService).start();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
             }

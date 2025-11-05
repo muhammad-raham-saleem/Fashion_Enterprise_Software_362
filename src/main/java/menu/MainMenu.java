@@ -1,0 +1,52 @@
+package menu;
+
+import model.DesignRepository;
+import service.*;
+import util.FileManager;
+
+import java.util.Scanner;
+
+public class MainMenu {
+    private final Scanner sc = new Scanner(System.in);
+
+    // Shared resources (repositories and services)
+    private final DesignRepository designRepo = new DesignRepository();
+    private final SketchService sketchService = new SketchService(designRepo, sc);
+    private final MaterialService materialService = new MaterialService(designRepo, sc);
+    private final ManufacturingService manufacturingService = new ManufacturingService(designRepo);
+    private final CostService costService = new CostService(designRepo, sc);
+
+    public void start() {
+        // Load data before menus
+        FileManager.loadData(designRepo.getSketches(), designRepo.getMaterials());
+
+        int choice;
+        do {
+            System.out.println("\n=== MAIN COMPANY MENU ===");
+            System.out.println("1. Design Department");
+            System.out.println("2. Warehouse Department");
+            System.out.println("3. Sales Department");
+            System.out.println("0. Exit");
+            System.out.print("Choose a department: ");
+
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
+                case 2 -> new WarehouseMenu(sc).start();
+                case 3 -> new SalesMenu(sc).start();
+                case 0 -> System.out.println("Exiting system...");
+                default -> System.out.println("Invalid option. Try again.");
+            }
+
+        } while (choice != 0);
+
+        sc.close();
+    }
+}
+
+

@@ -7,15 +7,12 @@ public class Staff {
     private String role;
     private int salary;
 
-    private boolean isManager;
-
     public Staff (String n, String d, String r, int s) {
 
         this.name = n;
         this.department = d;
         this.role = r;
         this.salary = s;
-        this.isManager = r.toLowerCase().contains("manager");
 
     }
 

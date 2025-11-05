@@ -1,7 +1,6 @@
 package service;
 
-import model.HR;
-import model.Staff;
+import model.*;
 import java.util.Scanner;
 
 public class HRService {
@@ -32,7 +31,12 @@ public class HRService {
         System.out.println("Enter" + name + "'s salary:");
         int salary = sc.nextInt();
 
-        Staff newStaff = new Staff(name, department, role, salary);
+        Staff newStaff;
+        if (role.toLowerCase().contains("manager")) {
+            newStaff = new Manager(name, department, role, salary);
+        } else {
+            newStaff = new Staff(name, department, role, salary);
+        }
         hr.getStaff().add(newStaff);
 
     }

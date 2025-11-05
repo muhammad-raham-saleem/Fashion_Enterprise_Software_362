@@ -21,6 +21,7 @@ public class SaleService {
         
         if(!inventory.hasStock(product.getId())){
             System.out.println("Item is out of stock");
+            scan.close();
             return;
         }
 
@@ -35,7 +36,9 @@ public class SaleService {
 
         if (!success){
             System.out.println("Payment failed. Sale cancelled");
+            scan.close();
             return;
+            
         }
 
         inventory.reduceStock(product.getId());
@@ -43,6 +46,7 @@ public class SaleService {
 
         Receipt receipt = new Receipt(product, product.getPrice());
         receipt.printReceipt();
+        scan.close();
     }
 
 

@@ -16,4 +16,17 @@ public class Staff {
 
     }
 
+    public String getName() {
+        return this.name;
+    }
+    public String getDepartment() {
+        return this.department;
+    }
+    public String getRole() {
+        return this.role;
+    }
+    public int getSalary() {
+        return this.salary;
+    }
+
 }

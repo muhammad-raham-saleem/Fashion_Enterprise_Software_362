@@ -1,7 +1,6 @@
 package menu;
 
-import model.DesignRepository;
-import model.Inventory;
+import model.*;
 import service.*;
 import util.FileManager;
 
@@ -19,6 +18,9 @@ public class MainMenu {
     private final Inventory inventory = new Inventory("inventory.txt");
     private final FinanceService financeService = new FinanceService("finance.txt");
     private final SaleService saleService = new SaleService(inventory, financeService);
+
+    private final HR hr = new HR();
+    private final HRService hrService = new HRService(hr, sc, "staff.txt");
     
 
     public void start() {
@@ -31,6 +33,7 @@ public class MainMenu {
             System.out.println("1. Design Department");
             System.out.println("2. Warehouse Department");
             System.out.println("3. Sales Department");
+            System.out.println("4. HR Department");
             System.out.println("0. Exit");
             System.out.print("Choose a department: ");
 
@@ -44,6 +47,7 @@ public class MainMenu {
                 case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
                 case 2 -> new WarehouseMenu(sc).start();
                 case 3 -> new SalesMenu(sc, saleService).start();
+                case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
             }

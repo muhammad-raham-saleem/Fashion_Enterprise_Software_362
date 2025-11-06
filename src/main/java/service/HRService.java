@@ -17,6 +17,7 @@ public class HRService {
 
     public void viewStaffList() {
 
+        loadStaff();
         if (this.hr.getStaff().isEmpty()) System.out.println("No staff hired.");
         else this.hr.getStaff().forEach(System.out::println);
         

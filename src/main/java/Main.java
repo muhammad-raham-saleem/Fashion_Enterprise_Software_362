@@ -1,7 +1,7 @@
 import menu.MainMenu;
 
 public class Main {
-    public static void main(String[] args) {
+    static void main(String[] args) {
         MainMenu mainMenu = new MainMenu();
         mainMenu.start(); // kick off the main system loop
     }

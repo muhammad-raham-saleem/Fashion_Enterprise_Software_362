@@ -6,6 +6,7 @@ public class Inventory {
     private int onHand;
     private int inTransit;
 
+    //sm
     public Inventory(String sku, String location, int onHand, int inTransit) {
         this.sku = sku;
         this.location = location;

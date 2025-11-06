@@ -6,4 +6,3 @@ public class Main {
         mainMenu.start(); // kick off the main system loop
     }
 }
-

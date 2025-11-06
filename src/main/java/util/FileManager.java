@@ -3,6 +3,7 @@ package util;
 import model.Material;
 import model.Sketch;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileManager {
@@ -45,6 +46,28 @@ public class FileManager {
             System.out.println("No saved data found, starting fresh.");
         } catch (IOException e) {
             System.out.println("Error loading data: " + e.getMessage());
+        }
+    }
+    public static List<String> readLines(String filename) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + filename);
+        }
+        return lines;
+    }
+
+    public static void writeLines(String filename, List<String> lines) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing file: " + filename);
         }
     }
 }

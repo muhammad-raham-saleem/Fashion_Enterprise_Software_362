@@ -1,0 +1,4 @@
+productId, quantity
+1,3
+2,3
+3,1

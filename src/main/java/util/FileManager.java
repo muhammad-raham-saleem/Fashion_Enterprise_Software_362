@@ -3,12 +3,13 @@ package util;
 import model.Material;
 import model.Sketch;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileManager {
 
     public static void saveData(List<Sketch> sketches, List<Material> materials) {
-        try (PrintWriter writer = new PrintWriter("data.txt")) {
+        try (PrintWriter writer = new PrintWriter("data/data.txt")) {
             writer.println("[SKETCHES]");
             for (Sketch s : sketches) writer.println(s.serialize());
             writer.println("[MATERIALS]");
@@ -22,7 +23,7 @@ public class FileManager {
     public static void loadData(List<Sketch> sketches, List<Material> materials) {
         sketches.clear();
         materials.clear();
-        try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("data/data.txt"))) {
             String line;
             boolean readingSketches = false, readingMaterials = false;
             while ((line = reader.readLine()) != null) {
@@ -46,5 +47,38 @@ public class FileManager {
         } catch (IOException e) {
             System.out.println("Error loading data: " + e.getMessage());
         }
+    }
+    public static List<String> readLines(String filename) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + filename);
+        }
+        return lines;
+    }
+
+    public static void writeLines(String filename, List<String> lines) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing file: " + filename);
+        }
+    }
+
+    public static void updateLine(String filename, String targetLineStart, String newLine) {
+        List<String> lines = readLines(filename);
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines.get(i).startsWith(targetLineStart)) {
+                lines.set(i, newLine);
+                break;
+            }
+        }
+        writeLines(filename, lines);
     }
 }

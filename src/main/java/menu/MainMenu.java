@@ -19,7 +19,7 @@ public class MainMenu {
     private final FinanceService financeService = new FinanceService("data/finance.txt");
     private final SaleService saleService = new SaleService(inventory, financeService);
     private final HR hr = new HR();
-    private final HRService hrService = new HRService(hr, sc, "staff.txt");
+    private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
     
 
     public void start() {

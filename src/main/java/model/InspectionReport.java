@@ -13,13 +13,11 @@ public class InspectionReport {
         REJECTED
     }
 
-    private int id;
     private ManufacturingBatch batch;
     private List<InspectionFinding> findings;
     private Status reportStatus = Status.PENDING;
 
-    public InspectionReport(int id, ManufacturingBatch batch, List<InspectionFinding> findings) {
-        this.id = id;
+    public InspectionReport(ManufacturingBatch batch, List<InspectionFinding> findings) {
         this.batch = batch;
         this.findings = findings;
     }
@@ -27,7 +25,6 @@ public class InspectionReport {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Inspection Report ID: ").append(id).append("\n");
         sb.append("Batch: ").append(batch).append("\n");
         sb.append("Status: ").append(reportStatus).append("\n");
         sb.append("Findings:\n");
@@ -51,5 +48,26 @@ public class InspectionReport {
             return false;
         }
         return findings.add(finding);
+    }
+
+    /**
+     * Calculate the failure rate based on the findings.
+     * @return Failure rate as a double between 0.0 and 1.0
+     */
+    public double getFailureRate() {
+        if (findings.isEmpty()) {
+            return 0.0;
+        }
+        int failedCount = findings.size();
+        for (InspectionFinding finding : findings) {
+            if (finding.getSeverity() == InspectionFinding.ProblemSeverity.NONE) {
+                failedCount--;
+            }
+        }
+        return (double) failedCount / findings.size();
+    }
+
+    public Status getReportStatus() {
+        return reportStatus;
     }
 }

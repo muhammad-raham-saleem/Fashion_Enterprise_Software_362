@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import model.Product;
+import model.ProductRepository;
 import service.SaleService;
 import util.FileManager;
 
@@ -19,6 +20,7 @@ public class SalesMenu {
 
     public void start() {
         int choice;
+        ProductRepository productRepo = new ProductRepository("data/products.txt");
         do {
             System.out.println("\n--- SALES MENU ---");
             System.out.println("1. Start Sale");
@@ -36,14 +38,12 @@ public class SalesMenu {
                 case 1 -> {
                     System.out.println("Enter product name.");
                     String productName = sc.nextLine();
-                    String productLine = findProductLine(productName);
+                    Product product = productRepo.findByName(productName);
 
-                    if (productLine == null){
+                    if (product == null){
                         System.out.println("Product doesn't exist.");
                         break;
                     }
-                    Product product = convertLineToProduct(productLine);
-
                     saleService.completeSale(product);
                 }
                 case 0 -> System.out.println("Returning to Main Menu..."); 
@@ -51,32 +51,6 @@ public class SalesMenu {
             }
         } while (choice != 0);
     }
-
-        private String findProductLine(String productName) {
-        List<String> lines = FileManager.readLines("products.txt");
-
-        for (int i = 1; i < lines.size(); i++) {
-            String[] parts = lines.get(i).split(",");
-            
-            if (parts[1].equalsIgnoreCase(productName)) {
-                return lines.get(i); 
-            }
-        }
-
-        return null; 
-    }
-
-        private Product convertLineToProduct(String line) {
-        String[] parts = line.split(",");
-        int id = Integer.parseInt(parts[0]);
-        String name = parts[1];
-        double price = Double.parseDouble(parts[2]);
-
-
-
-        return new Product(id, name, price);
-    }
-
 
 }
 

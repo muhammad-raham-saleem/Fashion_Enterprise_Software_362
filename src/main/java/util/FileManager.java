@@ -9,7 +9,7 @@ import java.util.List;
 public class FileManager {
 
     public static void saveData(List<Sketch> sketches, List<Material> materials) {
-        try (PrintWriter writer = new PrintWriter("data.txt")) {
+        try (PrintWriter writer = new PrintWriter("data/data.txt")) {
             writer.println("[SKETCHES]");
             for (Sketch s : sketches) writer.println(s.serialize());
             writer.println("[MATERIALS]");
@@ -23,7 +23,7 @@ public class FileManager {
     public static void loadData(List<Sketch> sketches, List<Material> materials) {
         sketches.clear();
         materials.clear();
-        try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("data/data.txt"))) {
             String line;
             boolean readingSketches = false, readingMaterials = false;
             while ((line = reader.readLine()) != null) {

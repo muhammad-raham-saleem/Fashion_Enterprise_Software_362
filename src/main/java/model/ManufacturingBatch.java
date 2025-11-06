@@ -20,10 +20,15 @@ public class ManufacturingBatch {
         this.id = id;
         this.product = product;
         this.items = items;
+        report = new InspectionReport(this, new ArrayList<>());
     }
 
     public List<Item> getItems() {
         return items;
+    }
+
+    public int getId() {
+        return id;
     }
 
     /**
@@ -50,14 +55,21 @@ public class ManufacturingBatch {
         return sampledItems;
     }
 
+    public InspectionReport getReport() {
+        return report;
+    }
+
     public List<Item> startInspection(double percentage) {
         List<Item> items = getSampleItems(percentage);
-        report = new InspectionReport(0, this, new ArrayList<>());
+        report = new InspectionReport(this, new ArrayList<>());
         return items;
     }
 
-    public InspectionReport endInspection(InspectionReport.Status status) {
-        report.sealReport(status);
-        return report;
+    public boolean endInspection(InspectionReport.Status status) {
+        return report.sealReport(status);
+    }
+
+    public String toString() {
+        return "Batch ID: " + id + ", Product: " + product.getName() + ", Quantity: " + items.size() + ", Report Status: " + report.getReportStatus().toString();
     }
 }

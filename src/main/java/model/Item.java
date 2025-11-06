@@ -1,29 +1,33 @@
 package model;
 
 /**
- * Represents an item in the manufacturing system.
+ * Represents an individual item in the manufacturing system.
  * @author Sheldon Corkery
  */
 public class Item {
     private int id;
     private Product product;
-    private int[] measurements;
+    private InspectionFinding.ProblemSeverity problemSeverity;
 
     public Item(int id, Product product) {
         this.id = id;
         this.product = product;
-    }
-
-    public void updateMeasurements(int[] measurements) {
-        this.measurements = measurements;
+        problemSeverity = InspectionFinding.ProblemSeverity.NONE;
     }
 
     public int getId() {
         return id;
     }
 
-    public boolean validateSpecification() {
-        // TODO read Specification from Product or file?
-        return false;
+    public Product getProduct() {
+        return product;
+    }
+
+    public InspectionFinding.ProblemSeverity getProblemSeverity() {
+        return problemSeverity;
+    }
+
+    public void setProblemSeverity(InspectionFinding.ProblemSeverity problemSeverity) {
+        this.problemSeverity = problemSeverity;
     }
 }

@@ -70,4 +70,15 @@ public class FileManager {
             System.out.println("Error writing file: " + filename);
         }
     }
+
+    public static void updateLine(String filename, String targetLineStart, String newLine) {
+        List<String> lines = readLines(filename);
+        for (int i = 0; i < lines.size(); i++) {
+            if (lines.get(i).startsWith(targetLineStart)) {
+                lines.set(i, newLine);
+                break;
+            }
+        }
+        writeLines(filename, lines);
+    }
 }

@@ -28,6 +28,7 @@ public class QualityControlService {
             System.out.println("Choose damage of item: ");
             System.out.println("0 - None, 1 - Minor, 2 - Major");
             int input = sc.nextInt();
+            sc.nextLine(); // Consume newline
             switch (input) {
                 case 0 -> item.setProblemSeverity(InspectionFinding.ProblemSeverity.NONE);
                 case 1 -> item.setProblemSeverity(InspectionFinding.ProblemSeverity.MINOR);

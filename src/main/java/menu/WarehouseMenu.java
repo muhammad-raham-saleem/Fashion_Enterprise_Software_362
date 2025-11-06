@@ -5,6 +5,7 @@ import service.QualityControlService;
 import util.FileManager;
 
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,6 +25,7 @@ public class WarehouseMenu {
             System.out.println("\n--- WAREHOUSE MENU ---");
             System.out.println("1. List batches");
             System.out.println("2. Review batches quality control");
+            System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
             while (!sc.hasNextInt()) {
@@ -40,7 +42,14 @@ public class WarehouseMenu {
                 }
                 case 2 -> {
                     System.out.print("Enter batch ID to inspect: ");
-                    int batchId = sc.nextInt();
+                    int batchId;
+                    try {
+                        batchId = sc.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.out.print("Invalid batch ID. Please enter a number. ");
+                        sc.next(); // Clear invalid input
+                        break;
+                    }
                     ManufacturingBatch batch = batches.get(batchId);
                     if (batch != null) {
                         qcService = new QualityControlService(batch);

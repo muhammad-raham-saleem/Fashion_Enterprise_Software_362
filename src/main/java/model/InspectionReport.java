@@ -1,5 +1,7 @@
 package model;
 
+import util.FileManager;
+
 import java.util.List;
 
 /**
@@ -40,6 +42,12 @@ public class InspectionReport {
         }
 
         this.reportStatus = status;
+        StringBuilder sb = new StringBuilder();
+        sb.append(batch.getId()).append(",")
+                .append(batch.getProduct().getId()).append(",")
+                .append(batch.countItems()).append(",")
+                .append(reportStatus.toString());
+        FileManager.updateLine("data/batches.csv", String.valueOf(batch.getId()), sb.toString());
         return true;
     }
 

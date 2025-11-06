@@ -23,12 +23,20 @@ public class ManufacturingBatch {
         report = new InspectionReport(this, new ArrayList<>());
     }
 
+    public int countItems() {
+        return items.size();
+    }
+
     public List<Item> getItems() {
         return items;
     }
 
     public int getId() {
         return id;
+    }
+
+    public Product getProduct() {
+        return product;
     }
 
     /**

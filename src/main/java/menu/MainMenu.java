@@ -15,8 +15,8 @@ public class MainMenu {
     private final MaterialService materialService = new MaterialService(designRepo, sc);
     private final ManufacturingService manufacturingService = new ManufacturingService(designRepo);
     private final CostService costService = new CostService(designRepo, sc);
-    private final Inventory inventory = new Inventory("inventory.txt");
-    private final FinanceService financeService = new FinanceService("finance.txt");
+    private final Inventory inventory = new Inventory("data/inventory.txt");
+    private final FinanceService financeService = new FinanceService("data/finance.txt");
     private final SaleService saleService = new SaleService(inventory, financeService);
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "staff.txt");

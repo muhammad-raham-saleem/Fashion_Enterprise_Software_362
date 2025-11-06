@@ -30,6 +30,7 @@ public class SalesMenu {
                 sc.next();
             }
             choice = sc.nextInt();
+            sc.nextLine();
 
             switch (choice) {
                 case 1 -> {

@@ -18,7 +18,7 @@ public class FinanceService {
         List<String> lines = util.FileManager.readLines(filename);
 
         for (String line : lines){
-            if (line.startsWith("Balance")) {
+            if (line.startsWith("balance")) {
                 balance = Double.parseDouble(line.split("=")[1]);
             }
         }

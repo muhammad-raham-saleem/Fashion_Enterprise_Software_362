@@ -21,7 +21,6 @@ public class SaleService {
         
         if(!inventory.hasStock(product.getId())){
             System.out.println("Item is out of stock");
-            scan.close();
             return;
         }
 
@@ -36,7 +35,7 @@ public class SaleService {
 
         if (!success){
             System.out.println("Payment failed. Sale cancelled");
-            scan.close();
+            
             return;
             
         }
@@ -46,7 +45,7 @@ public class SaleService {
 
         Receipt receipt = new Receipt(product, product.getPrice());
         receipt.printReceipt();
-        scan.close();
+        
     }
 
 
@@ -60,7 +59,7 @@ public class SaleService {
     private boolean processPayment(String method, double amount) {
         if (method.equalsIgnoreCase("card")) {
             // Simulate declined card
-            if (Math.random() < 0.05) {  // 5% chance decline
+            if (Math.random() < 0.02) {  // 2% chance decline
                 System.out.println("Card was declined!");
                 return false;
             }
@@ -68,7 +67,7 @@ public class SaleService {
         }
         else if (method.equalsIgnoreCase("cash")) {
             // Simulate counterfeit cash
-            if (Math.random() < 0.05) { // 5% chance counterfeit
+            if (Math.random() < 0.02) { // 2% chance counterfeit
                 System.out.println("Counterfeit cash detected!");
                 return false;
             }

@@ -20,6 +20,7 @@ public class MainMenu {
     private final SaleService saleService = new SaleService(inventory, financeService);
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
+    private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
     
 
     public void start() {
@@ -33,6 +34,7 @@ public class MainMenu {
             System.out.println("2. Warehouse Department");
             System.out.println("3. Sales Department");
             System.out.println("4. HR Department");
+            System.out.println("5. Shipping Department");
             System.out.println("0. Exit");
             System.out.print("Choose a department: ");
 
@@ -47,6 +49,8 @@ public class MainMenu {
                 case 2 -> new WarehouseMenu(sc).start();
                 case 3 -> new SalesMenu(sc, saleService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
+                case 5 -> new ShippingDepartmentMenu(sc).start();
+
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
             }

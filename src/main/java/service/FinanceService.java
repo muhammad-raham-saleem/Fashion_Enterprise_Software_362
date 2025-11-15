@@ -2,6 +2,7 @@ package service;
 
 import java.util.*;
 
+import model.Product;
 import util.FileManager;
 
 public class FinanceService {
@@ -37,5 +38,10 @@ public class FinanceService {
 
     public double getBalance() {
         return balance;
+    }
+
+    public void processReturn(Product product, int amount) {
+        balance -= product.getPrice() * amount;
+        saveBalance();
     }
 }

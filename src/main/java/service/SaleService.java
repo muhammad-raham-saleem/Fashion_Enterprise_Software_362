@@ -7,7 +7,7 @@ import model.Receipt;
 import java.util.*;
 
 public class SaleService {
-
+    private Scanner scan = new Scanner(System.in);
     private Inventory inventory;
     private FinanceService finance;
 
@@ -17,8 +17,7 @@ public class SaleService {
     }
 
     public void completeSale(Product product){
-        Scanner scan = new Scanner(System.in);
-        
+
         if(!inventory.hasStock(product.getId())){
             System.out.println("Item is out of stock");
             return;
@@ -43,17 +42,10 @@ public class SaleService {
         inventory.reduceStock(product.getId());
         finance.addSale(product.getPrice());
 
-        Receipt receipt = new Receipt(product, product.getPrice());
-        receipt.printReceipt();
-        
+        Receipt receipt = new Receipt(product, product.getPrice(), paymentMethod);
+        receipt.outputReceipt();
+        System.out.println(receipt);
     }
-
-
-
-
-        
-
-
 
     // Will need to be changed once it can fail. Random chance for now
     private boolean processPayment(String method, double amount) {
@@ -78,5 +70,68 @@ public class SaleService {
         return false;
     }
 
-    
+    public void processReturn(Product product) {
+        System.out.println("=== RETURN PROCESS ===");
+        System.out.println("Product: " + product.getName());
+        System.out.println("Price: $" + product.getPrice());
+
+        // Step 1: Check for receipt
+        System.out.println("\nDoes customer have receipt? (y/n)");
+        String hasReceipt = scan.nextLine();
+
+        if (!hasReceipt.equalsIgnoreCase("y")) {
+            System.out.println("\nAttempting to verify purchase...");
+            System.out.println("Enter customer email or phone number:");
+            String customerInfo = scan.nextLine();
+
+            // Simulate finding purchase in system
+            if (Math.random() < 0.3) {
+                System.out.println("Purchase found in system!");
+            } else {
+                System.out.println("Cannot verify purchase. Return denied.");
+                return;
+            }
+        }
+
+        // Step 2: Check return window
+        System.out.println("\nIs purchase within 7 days? (y/n)");
+        String withinWindow = scan.nextLine();
+
+        if (!withinWindow.equalsIgnoreCase("y")) {
+            System.out.println("Return window expired. Return denied.");
+            return;
+        }
+
+        // Step 3: Inspect for damage
+        System.out.println("\nInspecting product condition...");
+        System.out.println("Is product damaged? (y/n)");
+        String isDamaged = scan.nextLine();
+
+        if (isDamaged.equalsIgnoreCase("y")) {
+            System.out.println("Product is damaged. Return denied.");
+            return;
+        }
+
+        // Step 4: Process refund
+        System.out.println("\nProcessing refund...");
+        System.out.println("Original payment method (Cash/Card):");
+        String paymentMethod = scan.nextLine();
+
+        System.out.println("Refunding $" + product.getPrice() + " via " + paymentMethod);
+        finance.processReturn(product, 1); // TODO: quantity needs to come from receipt
+
+        // Step 5: QC approval
+        System.out.println("\nProduct sent to QC batch for review...");
+        boolean qcApproved = Math.random() < 0.95; // 95% approval rate
+
+        if (qcApproved) {
+            System.out.println("QC approved - restocking item.");
+            inventory.addStock(product.getId(), 1); // TODO: same
+        } else {
+            System.out.println("QC failed - item sent to rework.");
+        }
+
+        System.out.println("\n=== RETURN COMPLETED ===");
+    }
+
 }

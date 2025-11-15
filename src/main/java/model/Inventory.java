@@ -35,6 +35,11 @@ public class Inventory {
         saveStock();
     }
 
+    public void addStock(int productId, int amount){
+        stock.put(productId, stock.getOrDefault(productId,0) + amount);
+        saveStock();
+    }
+
     private void saveStock() {
         List<String> lines = new ArrayList<>();
         lines.add("productId, quantity");

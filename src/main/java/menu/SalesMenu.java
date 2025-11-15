@@ -24,6 +24,7 @@ public class SalesMenu {
         do {
             System.out.println("\n--- SALES MENU ---");
             System.out.println("1. Start Sale");
+            System.out.println("2. Start return");
             System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -45,6 +46,17 @@ public class SalesMenu {
                         break;
                     }
                     saleService.completeSale(product);
+                }
+                case 2 -> {
+                    System.out.println("Enter product name.");
+                    String productName = sc.nextLine();
+                    Product product = productRepo.findByName(productName);
+
+                    if (product == null){
+                        System.out.println("Product doesn't exist.");
+                        break;
+                    }
+                    saleService.processReturn(product);
                 }
                 case 0 -> System.out.println("Returning to Main Menu..."); 
                 default -> System.out.println("Invalid option.");

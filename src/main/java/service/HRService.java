@@ -14,11 +14,11 @@ public class HRService {
         this.hr = hr;
         this.sc = sc;
         this.filename = f;
+        loadStaff();
     }
 
     public void viewStaffList() {
 
-        loadStaff();
         if (this.hr.getStaff().isEmpty()) System.out.println("No staff hired.");
         else {
             for (Staff s : this.hr.getStaff()) {
@@ -39,7 +39,8 @@ public class HRService {
         } else {
             newStaff = new Staff(name, dep, role, salary);
         }
-        hr.getStaff().add(newStaff);
+        
+        hr.addStaff(newStaff);
         return newStaff;
 
     }

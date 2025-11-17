@@ -26,7 +26,7 @@ public class StaffMenu {
         user = hr.getStaffById(id);
 
         //Welcome message
-        System.out.println("Welcome, " + user.getName() + "!\n");
+        System.out.println("Welcome, " + user.getName() + "!");
 
         //Decide menu based on type of staff
         if (user instanceof Manager) managerMode();

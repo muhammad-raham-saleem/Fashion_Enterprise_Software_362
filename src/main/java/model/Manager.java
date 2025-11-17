@@ -21,26 +21,35 @@ public class Manager extends Staff {
     //Return list off all employees with < 3 in progress tasks
     public List<Staff> getAvailableEmployees() {
         
-        List<Staff> available = new ArrayList<>();
+        List<Staff> availableList = new ArrayList<>();
 
         for (Staff s : employees) {
-            if (s.isAvailable()) available.add(s);
+            if (s.isAvailable()) availableList.add(s);
         }
 
-        return available;
+        return availableList;
+    }
+
+    public void addEmployee (Staff s) {
+        employees.add(s);
     }
 
     @Override
     public void addTask (Task t) {
         tasks.add(t);
     }
+    @Override
+    public List<Task> getTasks() {
+        return tasks;
+    }
 
     //Return list of tasks not assigned to any employee
+    @Override
     public List<Task> getUnassignedTasks() {
 
         List<Task> unassigned = new ArrayList<>();
         for (Task t : tasks) {
-            if (!t.isAssigned()) unassigned.add(t);
+            if (!t.isAssigned() && !t.isCompleted()) unassigned.add(t);
         }
         return unassigned;
 

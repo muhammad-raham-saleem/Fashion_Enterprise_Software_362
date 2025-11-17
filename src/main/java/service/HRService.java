@@ -92,6 +92,7 @@ public class HRService {
                 int manager_id = Integer.parseInt(parts[6]);
                 Manager man = (Manager) hr.getStaffById(manager_id);
                 newStaff.setManager(man);
+                man.addEmployee(newStaff);
             }
         } 
     }

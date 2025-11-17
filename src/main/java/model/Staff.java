@@ -18,10 +18,11 @@ public class Staff {
 
     public Staff (String n, String d, String r, int s) {
 
-        this.name = n;
-        this.department = d;
-        this.role = r;
-        this.salary = s;
+        name = n;
+        department = d;
+        role = r;
+        salary = s;
+        available = true;
 
         //Assign unique staff ID
         staff_id = count;
@@ -30,19 +31,19 @@ public class Staff {
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
     public int getID() {
         return staff_id;
     }
     public String getDepartment() {
-        return this.department;
+        return department;
     }
     public String getRole() {
-        return this.role;
+        return role;
     }
     public int getSalary() {
-        return this.salary;
+        return salary;
     }
     public boolean isAvailable() {
         return available;
@@ -65,8 +66,19 @@ public class Staff {
         available = true;
     }
 
-    //Return list of tasks assigned, but not accepted
+    //Return list of unassigned tasks
     public List<Task> getUnassignedTasks() {
+
+        List<Task> unaccepted = new ArrayList<>();
+        for (Task t : tasks) {
+            if (!t.isAssigned() && !t.isCompleted()) unaccepted.add(t);
+        }
+        return unaccepted;
+
+    }
+
+    //Return list of tasks assigned, but not accepted
+    public List<Task> getUnrespondedTasks() {
 
         List<Task> unaccepted = new ArrayList<>();
         for (Task t : tasks) {

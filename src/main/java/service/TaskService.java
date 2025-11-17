@@ -31,11 +31,23 @@ public class TaskService {
 
         System.out.println("\n--- TASK LIST ---");
         List <Task> taskList = s.getTasks();
+        if (taskList.size() == 0) System.out.println("There are no tasks.");
+
         for (int i=1; i<=taskList.size(); i++) {
-            System.out.print(i + ". " + taskList.get(i).getName() + ": ");
-            if (!taskList.get(i).isAssigned()) System.out.println("UNASSIGNED");
-            else if (!taskList.get(i).isAccepted()) System.out.println("AWAITING RESPONSE");
-            else if (taskList.get(i).isCompleted()) System.out.println("COMPLETED");
+            System.out.print(i + ". " + taskList.get(i-1).getName());
+
+            //If manager, show name assigned employee if applicable
+            if (s instanceof Manager) {
+                if (taskList.get(i-1).isAssigned()) System.out.print(" (Assigned to " + taskList.get(i-1).getAssignee().getName() + "): ");
+                else System.out.print(": ");
+            }
+            //If not manager, show name of manager who assigned the task
+            else System.out.print(" (Assigned by " + taskList.get(i-1).getCreator().getName() + "): ");
+
+            //Print status of each task
+            if (taskList.get(i-1).isCompleted()) System.out.println("COMPLETED");
+            else if (!taskList.get(i-1).isAssigned()) System.out.println("UNASSIGNED");
+            else if (!taskList.get(i-1).isAccepted()) System.out.println("AWAITING RESPONSE");
             else System.out.println("IN PROGRESS");
         }
 
@@ -50,33 +62,26 @@ public class TaskService {
         System.out.println("Enter description of task:");
         String desc = sc.nextLine();
 
+        //Get date and time for deadline
         System.out.println("Enter deadline date (YYYY-MM-DD):");
         String dateText = sc.nextLine();
-
-        String[] dateParts = dateText.split("-");
-        int year = Integer.parseInt(dateParts[0]);
-        int month = Integer.parseInt(dateParts[1]);
-        int day = Integer.parseInt(dateParts[2]);
-
-        LocalDate dueDate = LocalDate.of(year, month, day);
-
         System.out.println("Enter deadline time (HH:MM) (24 hour time):");
         String timeText = sc.nextLine();
 
-        String[] timeParts = timeText.split(":");
-        int hour = Integer.parseInt(timeParts[0]);
-        int minute = Integer.parseInt(timeParts[1]);
-
-        LocalTime dueTime = LocalTime.of(hour, minute);
-        LocalDateTime deadline = LocalDateTime.of(dueDate, dueTime);
+        //Get date time object from text input
+        LocalDateTime deadline = dateStringToObject(dateText, timeText);
 
         Task newTask = new Task(creator, name, desc, deadline);
 
         allTasks.add(newTask);
+        creator.addTask(newTask);
         saveTasks();
 
-        int choice;
+        int choice = 0;
         do {
+            //Success message
+            System.out.println("Successfully created task.");
+            //Next steps
             System.out.println("\nWhat do you want to do now?");
             System.out.println("1. Assign Task to Employee");
             System.out.println("2. Save for Later");
@@ -93,7 +98,7 @@ public class TaskService {
                 case 2 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }
-        } while (choice != 2);
+        } while (choice <= 0);
 
         return newTask;
 
@@ -104,13 +109,13 @@ public class TaskService {
 
         List<Task> taskList = creator.getUnassignedTasks();
 
-        int choice;
+        int choice = -1;
         //Begin selection of task to assign
         do {
             System.out.println("\nSelect task to assign:");
             
             for (int i=1; i<=taskList.size(); i++) {
-                System.out.println(i + ". " + taskList.get(i).getName() + ": UNASSIGNED");
+                System.out.println(i + ". " + taskList.get(i-1).getName() + ": UNASSIGNED");
             }
 
             System.out.println("0: Cancel");
@@ -130,20 +135,20 @@ public class TaskService {
             }
             else System.out.println("Invalid option.");
 
-        } while (choice != 0);
+        } while (choice < 0);
 
     }
 
     //Manager assigns task to employee
     private void assignTask (Task task, Manager creator) {
 
-        int choice;
+        int choice = -1;
         do {
             System.out.println("\nWho would you like to assign this task to?");
 
             List<Staff> employeeList = creator.getAvailableEmployees();
             for (int i=1; i<=employeeList.size(); i++) {
-                System.out.println(i + ": " + employeeList.get(i).getName());
+                System.out.println(i + ". " + employeeList.get(i-1).getName() + ": AVAILABLE");
             }
 
             System.out.println("0: Cancel");
@@ -157,10 +162,14 @@ public class TaskService {
 
             //cancel or assign task to employee
             if (choice == 0) System.out.println("Returning...");
-            else if (choice < employeeList.size()+1) task.assign(employeeList.get(choice-1));
+            else if (choice < employeeList.size()+1) {
+                task.assign(employeeList.get(choice-1));
+                //Success message
+                System.out.println("Successfully assigned \"" + task.getName() + "\" to " + employeeList.get(choice-1).getName() + ". Awaiting response.");
+            }
             else System.out.println("Invalid option.");
 
-        } while (choice != 0);
+        } while (choice < 0);
 
         saveTasks();
 
@@ -169,7 +178,7 @@ public class TaskService {
     //Staff member accepts or declines task assigned by their manager
     public void answerTask (Staff s) {
 
-        List<Task> taskList = s.getUnassignedTasks();
+        List<Task> taskList = s.getUnrespondedTasks();
 
         int choice;
         //Begin selection of task to accept
@@ -177,7 +186,8 @@ public class TaskService {
             System.out.println("\nSelect task to accept/decline:");
             
             for (int i=1; i<=taskList.size(); i++) {
-                System.out.println(i + ". " + taskList.get(i).getName() + ": AWAITING RESPONSE");
+                System.out.println(i + ". " + taskList.get(i-1).getName() + ": AWAITING RESPONSE");
+                //TODO: Add assigned by for these other parts
             }
 
             System.out.println("0: Cancel");
@@ -197,7 +207,7 @@ public class TaskService {
             }
             else System.out.println("Invalid option.");
 
-        } while (choice != 0);
+        } while (choice < 0);
 
     }
 
@@ -219,13 +229,23 @@ public class TaskService {
             choice = sc.nextInt();
 
             switch (choice) {
-                case 1 -> t.setAccepted(true);
-                case 2 -> t.unassign();
+                case 1 -> {
+                    t.setAccepted(true);
+                    //Success message
+                    System.out.println("Successfully accepted task.");
+                }
+                case 2 -> {
+                    t.unassign();
+                    //Success message
+                    System.out.println("Successfully declined task.");
+                }
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }
 
-        } while (choice != 0);
+        } while (choice < 0);
+
+        saveTasks();
 
     }
 
@@ -240,7 +260,7 @@ public class TaskService {
             System.out.println("\nSelect task to mark as completed:");
             
             for (int i=1; i<=taskList.size(); i++) {
-                System.out.println(i + ". " + taskList.get(i).getName() + ": IN PROGRESS");
+                System.out.println(i + ". " + taskList.get(i-1).getName() + ": IN PROGRESS");
             }
 
             System.out.println("0: Cancel");
@@ -258,10 +278,14 @@ public class TaskService {
                 Task task = taskList.get(choice-1);
                 task.setCompleted(true);
                 task.unassign();
+                //Success message
+                System.out.println("Successfully completed task.");
             }
             else System.out.println("Invalid option.");
 
-        } while (choice != 0);
+        } while (choice < 0);
+
+        saveTasks();
 
     }
 
@@ -276,8 +300,8 @@ public class TaskService {
             lines.add("CREATOR_ID ~ " + task.getCreator().getID());
 
             //If assigned, write assignee ID. Else, write -1.
-            if (task.isAssigned()) lines.add("ASIGNEE_ID ~ " + task.getAssignee().getID());
-            else lines.add("ASIGNEE_ID ~ -1");
+            if (task.isAssigned()) lines.add("ASSIGNEE_ID ~ " + task.getAssignee().getID());
+            else lines.add("ASSIGNEE_ID ~ -1");
 
             lines.add("NAME ~ " + task.getName());
             lines.add("DESCRIPTION ~ " + task.getDescription());
@@ -333,7 +357,14 @@ public class TaskService {
                 } 
                 case "NAME" ->name = line.split("~ ")[1];
                 case "DESCRIPTION" -> desc = line.split("~ ")[1];
-                case "DEADLINE" -> desc = line.split("~ ")[1];
+                case "DEADLINE" -> {
+                    //Parse date string
+                    String[] dline = line.split("~ ")[1].split("T");
+                    String dateText = dline[0];
+                    String timeText = dline[1];
+                    //Get date time object from text input
+                    deadline = dateStringToObject(dateText, timeText);
+                }
                 case "ACCEPTED" -> accepted = Boolean.parseBoolean(line.split("~ ")[1]);
                 case "COMPLETED" -> completed = Boolean.parseBoolean(line.split("~ ")[1]);
                 case "END TASK" -> {
@@ -349,6 +380,25 @@ public class TaskService {
             }
 
         } 
+    }
+
+    //Convert DateTime string into object
+    private LocalDateTime dateStringToObject (String dateText, String timeText) {
+
+        String[] dateParts = dateText.split("-");
+        int year = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+
+        LocalDate dueDate = LocalDate.of(year, month, day);
+
+        String[] timeParts = timeText.split(":");
+        int hour = Integer.parseInt(timeParts[0]);
+        int minute = Integer.parseInt(timeParts[1]);
+
+        LocalTime dueTime = LocalTime.of(hour, minute);
+        return LocalDateTime.of(dueDate, dueTime);
+
     }
 
 }

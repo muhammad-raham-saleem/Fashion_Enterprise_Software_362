@@ -14,6 +14,7 @@ public class Task {
 
     private boolean assigned; //Is this task assigned to anyone?
     private boolean completed; //Has this task been completed?
+    private boolean accepted; //Has this task been accepted by an assignee?
 
 
     //Constructor for creating new task manually, starts unassigned
@@ -25,11 +26,12 @@ public class Task {
         this.deadline = deadline;
         assigned = false;
         completed = false;
+        accepted = false;
 
     }
 
     //Constructor for loading task from file, takes all variables as input
-    public Task (Manager creator, Staff assignee, String name, String desc, LocalDateTime deadline, boolean assigned, boolean completed) {
+    public Task (Manager creator, Staff assignee, String name, String desc, LocalDateTime deadline, boolean assigned, boolean completed, boolean accepted) {
 
         this.creator = creator;
         this.assignee = assignee;
@@ -38,6 +40,7 @@ public class Task {
         this.deadline = deadline;
         this.assigned = assigned;
         this.completed = completed;
+        this.accepted = accepted;
 
     }
 
@@ -63,12 +66,16 @@ public class Task {
     public boolean isAssigned() {
         return assigned;
     }
+    public boolean isAccepted() {
+        return accepted;
+    }
 
     //Assign employee to task if unassigned. Return success status.
     public boolean assign (Staff s) {
 
         if (assigned) return false;
         assignee = s;
+        assignee.addTask(this);
         assigned = true;
         return true;
 
@@ -76,13 +83,23 @@ public class Task {
 
     //Unassign task
     public void unassign () {
+
+        //Remove task from asignee's task list, 
+        assignee.removeTask(this);
         assignee = null;
         assigned = false;
+        accepted = false;
+
     }
 
     //Set task's completion status
     public void setCompleted (boolean status) {
         completed = status;
+    }
+
+    //Set task's accepted status
+    public void setAccepted (boolean status) {
+        accepted = status;
     }
 
 }

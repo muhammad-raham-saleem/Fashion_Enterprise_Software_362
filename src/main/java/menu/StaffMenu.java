@@ -25,6 +25,9 @@ public class StaffMenu {
         int id = sc.nextInt();
         user = hr.getStaffById(id);
 
+        //Welcome message
+        System.out.println("Welcome, " + user.getName() + "!\n");
+
         //Decide menu based on type of staff
         if (user instanceof Manager) managerMode();
         else staffMode();
@@ -38,7 +41,7 @@ public class StaffMenu {
         do {
             System.out.println("\nWhat do you want to do?");
             System.out.println("1. View Your Tasks");
-            System.out.println("2. Accept Pending Task");
+            System.out.println("2. Accept or Decline Pending Task");
             System.out.println("3. Complete Task");
             System.out.println("0. Cancel");
             System.out.print("Choose an option: ");
@@ -51,7 +54,7 @@ public class StaffMenu {
 
             switch (choice) {
                 case 1 -> taskService.viewTasks(user);
-                case 2 -> taskService.acceptTask(user);
+                case 2 -> taskService.answerTask(user);
                 case 3 -> taskService.completeTask(user);
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
@@ -86,8 +89,8 @@ public class StaffMenu {
                 case 1 -> taskService.viewTasks(user_m);
                 case 2 -> taskService.createTask(user_m);
                 case 3 -> taskService.beginAssignment(user_m);
-                case 4 -> taskService.editTask(user_m);
-                case 5 -> taskService.cancelTask(user_m);
+                //case 4 -> taskService.editTask(user_m);
+                //case 5 -> taskService.cancelTask(user_m);
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }

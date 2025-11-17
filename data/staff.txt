@@ -1,3 +1,9 @@
-name, department, role, salary
-Bob, Finance, Accounting, 50000
-Joe, Manufacturing, Machine Operator, 50000
+name, id, department, role, salary, isManager, manager
+John, 1, Finance, Manager, 80000, true
+Bob, 2, Finance, Accountant, 50000, false, 1
+Frank, 3, Finance, Accountant, 50000, false, 1
+Jimmy, 4, Finance, Accountant, 50000, false, 1
+Mike, 5, Manufacturing, Manager, 70000, true
+Joe, 6, Manufacturing, Machine Operator, 50000, false, 5
+Andrew, 7, Manufacturing, Machine Operator, 50000, false, 5
+Bob, 8, Manufacturing, Machine Operator, 50000, false, 5

@@ -6,7 +6,7 @@ import java.util.List;
 public class Manager extends Staff {
 
     private List<Staff> employees = new ArrayList<>();
-    private List<Task> createdTasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>(); //All created tasks
 
     public Manager (String n, String d, String r, int s) {
 
@@ -32,7 +32,18 @@ public class Manager extends Staff {
 
     @Override
     public void addTask (Task t) {
-        createdTasks.add(t);
+        tasks.add(t);
+    }
+
+    //Return list of tasks not assigned to any employee
+    public List<Task> getUnassignedTasks() {
+
+        List<Task> unassigned = new ArrayList<>();
+        for (Task t : tasks) {
+            if (!t.isAssigned()) unassigned.add(t);
+        }
+        return unassigned;
+
     }
 
 }

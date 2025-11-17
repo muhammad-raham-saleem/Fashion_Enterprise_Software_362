@@ -21,6 +21,7 @@ public class MainMenu {
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
     private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
+    private final TaskService taskService = new TaskService(hr, sc, "data/tasks.txt");
     
 
     public void start() {
@@ -35,8 +36,9 @@ public class MainMenu {
             System.out.println("3. Sales Department");
             System.out.println("4. HR Department");
             System.out.println("5. Shipping Department");
+            System.out.println("6. Staff/Manager Menu");
             System.out.println("0. Exit");
-            System.out.print("Choose a department: ");
+            System.out.print("Choose an option: ");
 
             while (!sc.hasNextInt()) {
                 System.out.print("Enter a valid number: ");
@@ -50,6 +52,7 @@ public class MainMenu {
                 case 3 -> new SalesMenu(sc, saleService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 5 -> new ShippingDepartmentMenu(sc).start();
+                case 6 -> new StaffMenu(sc, hr, taskService).start();
 
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");

@@ -80,4 +80,13 @@ public class ManufacturingBatch {
     public String toString() {
         return "Batch ID: " + id + ", Product: " + product.getName() + ", Quantity: " + items.size() + ", Report Status: " + report.getReportStatus().toString();
     }
+
+    public boolean saveToBatchFile() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(id).append(",")
+          .append(product.getId()).append(",")
+          .append(items.size()).append(",")
+          .append(report.getReportStatus().toString());
+        return util.FileManager.appendLine("data/batches.csv", sb.toString());
+    }
 }

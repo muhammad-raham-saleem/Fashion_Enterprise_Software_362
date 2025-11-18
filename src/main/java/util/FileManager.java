@@ -81,4 +81,13 @@ public class FileManager {
         }
         writeLines(filename, lines);
     }
+
+    public static boolean appendLine(String filename, String line) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
+            writer.println(line);
+        } catch (IOException e) {
+            System.out.println("Error appending to file: " + filename);
+        }
+        return false;
+    }
 }

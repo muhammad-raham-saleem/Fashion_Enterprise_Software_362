@@ -1,8 +1,6 @@
 package service;
 
-import model.Inventory;
-import model.Product;
-import model.Receipt;
+import model.*;
 
 import java.util.*;
 
@@ -83,14 +81,7 @@ public class SaleService {
             System.out.println("\nAttempting to verify purchase...");
             System.out.println("Enter customer email or phone number:");
             String customerInfo = scan.nextLine();
-
-            // Simulate finding purchase in system
-            if (Math.random() < 0.3) {
-                System.out.println("Purchase found in system!");
-            } else {
-                System.out.println("Cannot verify purchase. Return denied.");
-                return;
-            }
+            System.out.println("Purchase found in system!");
         }
 
         // Step 2: Check return window
@@ -120,18 +111,40 @@ public class SaleService {
         System.out.println("Refunding $" + product.getPrice() + " via " + paymentMethod);
         finance.processReturn(product, 1); // TODO: quantity needs to come from receipt
 
-        // Step 5: QC approval
-        System.out.println("\nProduct sent to QC batch for review...");
-        boolean qcApproved = Math.random() < 0.95; // 95% approval rate
+        // Step 5: Create a batch for the returned item to be re-inspected by QC
+        int batchId = generateUniqueBatchId();
+        List<Item> returnedItems = Collections.singletonList(new Item(1, product));
+        ManufacturingBatch returnBatch = new ManufacturingBatch(batchId, product, returnedItems);
 
-        if (qcApproved) {
-            System.out.println("QC approved - restocking item.");
-            inventory.addStock(product.getId(), 1); // TODO: same
-        } else {
-            System.out.println("QC failed - item sent to rework.");
+        // Save the batch to batches.csv for QC inspection
+        returnBatch.saveToBatchFile();
+
+        System.out.println("\nReturned item added to QC batch #" + batchId + " for inspection.");
+        System.out.println("=== RETURN COMPLETED ===");
+    }
+
+    /**
+     * Generate a unique batch ID by finding the highest existing ID and incrementing
+     */
+    private int generateUniqueBatchId() {
+        List<String> lines = util.FileManager.readLines("data/batches.csv");
+        int maxId = 0;
+
+        for (int i = 1; i < lines.size(); i++) { // Skip header
+            String[] parts = lines.get(i).split(",");
+            if (parts.length > 0) {
+                try {
+                    int id = Integer.parseInt(parts[0]);
+                    if (id > maxId) {
+                        maxId = id;
+                    }
+                } catch (NumberFormatException e) {
+                    // Skip invalid
+                }
+            }
         }
 
-        System.out.println("\n=== RETURN COMPLETED ===");
+        return maxId + 1;
     }
 
 }

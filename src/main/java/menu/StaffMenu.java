@@ -25,8 +25,8 @@ public class StaffMenu {
         int id = sc.nextInt();
         user = hr.getStaffById(id);
 
-        //Welcome message
-        System.out.println("Welcome, " + user.getName() + "!");
+        //Display Info
+        System.out.print("\nName: " + user.getName() + ", Department: " + user.getDepartment() + ", Type: ");
 
         //Decide menu based on type of staff
         if (user instanceof Manager) managerMode();
@@ -37,9 +37,11 @@ public class StaffMenu {
     //Menu for regular staff
     private void staffMode () {
 
+        System.out.println("Regular Staff");
+
         int choice;
         do {
-            System.out.println("\nWhat do you want to do?");
+            System.out.println("\n--- STAFF MENU ---");
             System.out.println("1. View Your Tasks");
             System.out.println("2. Accept or Decline Pending Task");
             System.out.println("3. Complete Task");
@@ -66,16 +68,16 @@ public class StaffMenu {
     //Menu for managers
     private void managerMode () {
 
+        System.out.println("Manager");
         Manager user_m = (Manager) user;
 
         int choice;
         do {
-            System.out.println("\nWhat do you want to do?");
+            System.out.println("\n--- MANAGER MENU ---");
             System.out.println("1. View Your Created Tasks");
             System.out.println("2. Create New Task");
             System.out.println("3. Assign Task to Employee");
-            System.out.println("4. Edit Task");
-            System.out.println("5. Unassign or Cancel Task");
+            System.out.println("4. Unassign or Cancel Task");
             System.out.println("0. Cancel");
             System.out.print("Choose an option: ");
 
@@ -89,8 +91,7 @@ public class StaffMenu {
                 case 1 -> taskService.viewTasks(user_m);
                 case 2 -> taskService.createTask(user_m);
                 case 3 -> taskService.beginAssignment(user_m);
-                //case 4 -> taskService.editTask(user_m);
-                //case 5 -> taskService.cancelTask(user_m);
+                //case 4 -> taskService.cancelTask(user_m);
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }

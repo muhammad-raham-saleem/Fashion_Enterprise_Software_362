@@ -1,26 +1,28 @@
 BEGIN TASK
 CREATOR_ID ~ 1
-ASSIGNEE_ID ~ -1
+ASSIGNEE_ID ~ 2
 NAME ~ Test Task
 DESCRIPTION ~ This is a test. Testing creation of tasks. What happens if I go off the screen? Okay, the text wraps. Done.
 DEADLINE ~ 2025-11-20T16:10
 ACCEPTED ~ false
 COMPLETED ~ true
+COMMENTS ~ Testing. I have completed this task.
+SUBMIT_DATETIME ~ 2025-11-17T20:19
+END TASK
+
+BEGIN TASK
+CREATOR_ID ~ 1
+ASSIGNEE_ID ~ 4
+NAME ~ Test Task 2
+DESCRIPTION ~ Here's another one for you Bob. You did great on the first one. Keep it up!
+DEADLINE ~ 2025-11-19T17:00
+ACCEPTED ~ true
+COMPLETED ~ false
 END TASK
 
 BEGIN TASK
 CREATOR_ID ~ 1
 ASSIGNEE_ID ~ -1
-NAME ~ Test Task 2
-DESCRIPTION ~ Here's another one for you Bob. You did great on the first one. Keep it up!
-DEADLINE ~ 2025-11-19T17:00
-ACCEPTED ~ false
-COMPLETED ~ true
-END TASK
-
-BEGIN TASK
-CREATOR_ID ~ 1
-ASSIGNEE_ID ~ 3
 NAME ~ Test task 3
 DESCRIPTION ~ Final test. Use case 1 is complete!!!
 DEADLINE ~ 2036-08-12T10:10
@@ -30,11 +32,13 @@ END TASK
 
 BEGIN TASK
 CREATOR_ID ~ 5
-ASSIGNEE_ID ~ -1
+ASSIGNEE_ID ~ 8
 NAME ~ Time test
 DESCRIPTION ~ I just realized there could be a glitch with certain time values.
 DEADLINE ~ 2025-06-07T00:00
 ACCEPTED ~ false
 COMPLETED ~ true
+COMMENTS ~ Nope. It's all good. No glitches.
+SUBMIT_DATETIME ~ 2025-11-16T12:30
 END TASK
 

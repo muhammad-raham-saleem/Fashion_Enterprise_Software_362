@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Task {
@@ -16,6 +17,9 @@ public class Task {
     private boolean completed; //Has this task been completed?
     private boolean accepted; //Has this task been accepted by an assignee?
 
+    private String comments; //Comments added when completed
+    private LocalDateTime submitDateTime; //Date and time of submission
+
 
     //Constructor for creating new task manually, starts unassigned
     public Task (Manager creator, String name, String desc, LocalDateTime deadline) {
@@ -31,7 +35,7 @@ public class Task {
     }
 
     //Constructor for loading task from file, takes all variables as input
-    public Task (Manager creator, Staff assignee, String name, String desc, LocalDateTime deadline, boolean assigned, boolean completed, boolean accepted) {
+    public Task (Manager creator, Staff assignee, String name, String desc, LocalDateTime deadline, boolean assigned, boolean completed, boolean accepted, String comments, LocalDateTime subDateTime) {
 
         this.creator = creator;
         this.assignee = assignee;
@@ -41,6 +45,8 @@ public class Task {
         this.assigned = assigned;
         this.completed = completed;
         this.accepted = accepted;
+        this.comments = comments;
+        this.submitDateTime = subDateTime;
 
     }
 
@@ -70,6 +76,27 @@ public class Task {
         return accepted;
     }
 
+    //Completed specific getters
+    public String getComments() {
+        return comments;
+    }
+    public LocalDateTime getSubmitDateTime() {
+        return submitDateTime;
+    }
+
+    //Get on time status of task
+    public boolean onTime() {
+        
+        //If completed, compare submission time with deadline
+        //Otherwise, compare current time with deadline
+        if (completed) {
+            return submitDateTime.isBefore(deadline);
+        } else {
+            return LocalDateTime.now().isBefore(deadline);
+        }
+
+    }
+
     //Assign employee to task if unassigned. Return success status.
     public boolean assign (Staff s) {
 
@@ -92,9 +119,12 @@ public class Task {
 
     }
 
-    //Set task's completion status
-    public void setCompleted (boolean status) {
-        completed = status;
+    //Complete task
+    public void complete (String comments, LocalDateTime subDateTime) {
+        completed = true;
+        this.comments = comments;
+        this.submitDateTime = subDateTime;
+        assignee.removeTask(this);
     }
 
     //Set task's accepted status

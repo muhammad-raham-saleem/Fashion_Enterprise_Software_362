@@ -42,6 +42,10 @@ public class Manager extends Staff {
     public List<Task> getTasks() {
         return tasks;
     }
+    @Override
+    public void removeTask (Task t) {
+        tasks.remove(t);
+    }
 
     //Return list of tasks not assigned to any employee
     @Override
@@ -49,7 +53,7 @@ public class Manager extends Staff {
 
         List<Task> unassigned = new ArrayList<>();
         for (Task t : tasks) {
-            if (!t.isAssigned() && !t.isCompleted()) unassigned.add(t);
+            if (!t.isAssigned()) unassigned.add(t);
         }
         return unassigned;
 

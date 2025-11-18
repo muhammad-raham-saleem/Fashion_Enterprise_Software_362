@@ -34,20 +34,30 @@ public class TaskService {
         if (taskList.size() == 0) System.out.println("There are no tasks.");
 
         for (int i=1; i<=taskList.size(); i++) {
-            System.out.print(i + ". " + taskList.get(i-1).getName());
+
+            Task currTask = taskList.get(i-1);
+            System.out.print(i + ". " + currTask.getName());
 
             //If manager, show name assigned employee if applicable
             if (s instanceof Manager) {
-                if (taskList.get(i-1).isAssigned()) System.out.print(" (Assigned to " + taskList.get(i-1).getAssignee().getName() + "): ");
+                if (currTask.isAssigned()) System.out.print(" (Assigned to " + currTask.getAssignee().getName() + "): ");
                 else System.out.print(": ");
             }
-            //If not manager, show name of manager who assigned the task
-            else System.out.print(" (Assigned by " + taskList.get(i-1).getCreator().getName() + "): ");
+            //If not manager, show name of manager who assigned the task + due date
+            else {
+                System.out.print(" (Assigned by " + currTask.getCreator().getName() + ", Due " + currTask.getDeadline() + "): ");
+            }
 
             //Print status of each task
-            if (taskList.get(i-1).isCompleted()) System.out.println("COMPLETED");
-            else if (!taskList.get(i-1).isAssigned()) System.out.println("UNASSIGNED");
-            else if (!taskList.get(i-1).isAccepted()) System.out.println("AWAITING RESPONSE");
+            if (currTask.isCompleted()) {
+
+                System.out.print("COMPLETED ");
+                //Print on time status
+                if (currTask.onTime()) System.out.println("ON TIME");
+                else System.out.println("LATE");
+            }
+            else if (!currTask.isAssigned()) System.out.println("UNASSIGNED");
+            else if (!currTask.isAccepted()) System.out.println("AWAITING RESPONSE");
             else System.out.println("IN PROGRESS");
         }
 
@@ -186,8 +196,7 @@ public class TaskService {
             System.out.println("\nSelect task to accept/decline:");
             
             for (int i=1; i<=taskList.size(); i++) {
-                System.out.println(i + ". " + taskList.get(i-1).getName() + ": AWAITING RESPONSE");
-                //TODO: Add assigned by for these other parts
+                System.out.println(i + ". " + taskList.get(i-1).getName() + " (Assigned by " + taskList.get(i-1).getCreator().getName() + ", Due " + taskList.get(i-1).getDeadline() + "): AWAITING RESPONSE");
             }
 
             System.out.println("0: Cancel");
@@ -260,7 +269,7 @@ public class TaskService {
             System.out.println("\nSelect task to mark as completed:");
             
             for (int i=1; i<=taskList.size(); i++) {
-                System.out.println(i + ". " + taskList.get(i-1).getName() + ": IN PROGRESS");
+                System.out.println(i + ". " + taskList.get(i-1).getName() + " (Assigned by " + taskList.get(i-1).getCreator().getName() + ", Due " + taskList.get(i-1).getDeadline() + "): IN PROGRESS");
             }
 
             System.out.println("0: Cancel");
@@ -275,9 +284,19 @@ public class TaskService {
             //cancel or complete task
             if (choice == 0) System.out.println("Returning...");
             else if (choice < taskList.size()+1) {
+
+                //Staff member enters comments for their submission
+                System.out.println("Enter comments for your submission:");
+                Scanner sc2 = new Scanner(System.in);
+                String comm = sc2.nextLine();
+
+                //Get current date and time of submission
+                LocalDateTime now = LocalDateTime.now();
+
+                //Get task and complete it
                 Task task = taskList.get(choice-1);
-                task.setCompleted(true);
-                task.unassign();
+                task.complete(comm, now);
+
                 //Success message
                 System.out.println("Successfully completed task.");
             }
@@ -308,6 +327,14 @@ public class TaskService {
             lines.add("DEADLINE ~ " + task.getDeadline());
             lines.add("ACCEPTED ~ " + task.isAccepted());
             lines.add("COMPLETED ~ " + task.isCompleted());
+
+            //If task is completed, save additional related fields
+            if (task.isCompleted()) {
+
+                lines.add("COMMENTS ~ " + task.getComments());
+                lines.add("SUBMIT_DATETIME ~ " + task.getSubmitDateTime());
+            }
+
             lines.add("END TASK");
             lines.add("");
             
@@ -331,6 +358,8 @@ public class TaskService {
         boolean assigned = false;
         boolean completed = false;
         boolean accepted = false;
+        String comments = null;
+        LocalDateTime submitDateTime = null;
 
         for (String line : lines) {
 
@@ -367,14 +396,23 @@ public class TaskService {
                 }
                 case "ACCEPTED" -> accepted = Boolean.parseBoolean(line.split("~ ")[1]);
                 case "COMPLETED" -> completed = Boolean.parseBoolean(line.split("~ ")[1]);
+                case "COMMENTS" -> comments = line.split("~ ")[1];
+                case "SUBMIT_DATETIME" -> {
+                    //Parse date string
+                    String[] sdt = line.split("~ ")[1].split("T");
+                    String dateText = sdt[0];
+                    String timeText = sdt[1];
+                    //Get date time object from text input
+                    submitDateTime = dateStringToObject(dateText, timeText);
+                }
                 case "END TASK" -> {
 
                     //Create the task and add it
-                    currentTask = new Task(creator, assignee, name, desc, deadline, assigned, completed, accepted);
+                    currentTask = new Task(creator, assignee, name, desc, deadline, assigned, completed, accepted, comments, submitDateTime);
                     allTasks.add(currentTask);
                     creator.addTask(currentTask);
-                    //If task is assign, add to assignee's task list
-                    if (assigned) assignee.addTask(currentTask);
+                    //If task is assigned but not completed, add to assignee's task list
+                    if (assigned && !completed) assignee.addTask(currentTask);
                 }
 
             }

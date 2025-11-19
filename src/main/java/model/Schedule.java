@@ -5,10 +5,10 @@ import java.util.Scanner;
 
 public class Schedule {
 
-    public void generateSchedule(List<String> items) {
+    public void generateSchedule(List<String> products) {
         System.out.println("Generating schedule for items:");
-        for (String item : items) {
-            System.out.println(" - " + item);
+        for (String product : products) {
+            System.out.println(" - " + product);
         }
     }
 

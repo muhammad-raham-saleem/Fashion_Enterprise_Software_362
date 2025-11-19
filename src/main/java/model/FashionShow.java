@@ -7,7 +7,7 @@ import service.FinanceService;
 
 public class FashionShow {
 
-    private List<String> items;
+    private List<String> products;
     private int expectedAttendees;
     private String venue;
 
@@ -25,24 +25,23 @@ public class FashionShow {
         System.out.println("Fashion Show Scheduling started");
     }
 
-    public void inputItemsToShow(List<String> items){
-    this.items = items; 
-    System.out.println("Items Added:" + items);
+    public void inputItemsToShow(List<String> products){
+    this.products = products; 
+    System.out.println("Products Added:" + products);
     }
 
 
     public void addEvent(LocalDate date){
         events.addEvent(this.venue, date);
-        System.out.println("Event Recorded");
     }
 
     public void generateSchedule(){
-        schedule.generateSchedule(items);
+        schedule.generateSchedule(products);
     }
 
     public void inputExpectedIntendees(int num){
         this.expectedAttendees = num;
-        System.out.println("Expected Attendees");
+        System.out.println("Expected Attendees : " + num);
     }
 
     public void inputVenue(String venue){

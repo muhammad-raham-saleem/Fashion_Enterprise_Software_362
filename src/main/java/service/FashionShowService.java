@@ -24,22 +24,28 @@ public class FashionShowService {
         
         FashionShow show = new FashionShow(schedule, events, financeService);
         Scanner scan = new Scanner(System.in);
+
         show.scheduleFashionShow();
         show.inputItemsToShow(items);
         show.generateSchedule();
+
         if (!schedule.approveSchedule()) {
             System.out.println("Schedule not approved. Fashion Show cannot proceed.");
             return;
         }
+
         show.inputExpectedIntendees(expectedAttendance);
         show.inputVenue(venue);
+
         System.out.println("Simulate show? (Y/N)");
         String answer = scan.nextLine();
+
         if (answer.equalsIgnoreCase("Y")){
             show.addProfit(projectedProfit);
             show.addEvent(date);
             System.out.println("Fashion Show Successfuly Completed");
         }
+        
         if (answer.equalsIgnoreCase("N")){
             show.addEvent(date);
             System.out.println("Fashion Show Successfuly Completed");

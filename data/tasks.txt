@@ -12,11 +12,11 @@ END TASK
 
 BEGIN TASK
 CREATOR_ID ~ 1
-ASSIGNEE_ID ~ 4
+ASSIGNEE_ID ~ -1
 NAME ~ Test Task 2
 DESCRIPTION ~ Here's another one for you Bob. You did great on the first one. Keep it up!
 DEADLINE ~ 2025-11-19T17:00
-ACCEPTED ~ true
+ACCEPTED ~ false
 COMPLETED ~ false
 END TASK
 

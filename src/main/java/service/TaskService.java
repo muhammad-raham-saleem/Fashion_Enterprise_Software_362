@@ -29,37 +29,90 @@ public class TaskService {
     //For Staff: Assigned tasks, For Managers: Created tasks
     public void viewTasks(Staff s) {
 
-        System.out.println("\n--- TASK LIST ---");
         List <Task> taskList = s.getTasks();
-        if (taskList.size() == 0) System.out.println("There are no tasks.");
+        int choice = 0;
 
-        for (int i=1; i<=taskList.size(); i++) {
+        do {
 
-            Task currTask = taskList.get(i-1);
-            System.out.print(i + ". " + currTask.getName());
+            System.out.println("\n--- TASK LIST ---");
+            if (taskList.size() == 0) System.out.println("There are no tasks.");
 
-            //If manager, show name assigned employee if applicable
-            if (s instanceof Manager) {
-                if (currTask.isAssigned()) System.out.print(" (Assigned to " + currTask.getAssignee().getName() + "): ");
-                else System.out.print(": ");
+            for (int i=1; i<=taskList.size(); i++) {
+
+                Task currTask = taskList.get(i-1);
+                System.out.print(i + ". " + currTask.getName());
+
+                //If manager, show name assigned employee if applicable
+                if (s instanceof Manager) {
+                    if (currTask.isAssigned()) System.out.print(" (Assigned to " + currTask.getAssignee().getName() + "): ");
+                    else System.out.print(": ");
+                }
+                //If not manager, show name of manager who assigned the task + due date
+                else {
+                    System.out.print(" (Assigned by " + currTask.getCreator().getName() + ", Due " + currTask.getDeadline().toLocalDate() + "): ");
+                }
+
+                //Print status of each task
+                if (currTask.isCompleted()) {
+
+                    System.out.print("COMPLETED ");
+                    //Print on time status
+                    if (currTask.onTime()) System.out.println("ON TIME");
+                    else System.out.println("LATE");
+                }
+                else if (!currTask.isAssigned()) System.out.println("UNASSIGNED");
+                else if (!currTask.isAccepted()) System.out.println("AWAITING RESPONSE");
+                else System.out.println("IN PROGRESS");
             }
-            //If not manager, show name of manager who assigned the task + due date
-            else {
-                System.out.print(" (Assigned by " + currTask.getCreator().getName() + ", Due " + currTask.getDeadline() + "): ");
-            }
 
-            //Print status of each task
-            if (currTask.isCompleted()) {
+            //Next steps
+            System.out.println("\nEnter Task Number to View Details.");
+            System.out.println("Or Type 0 to Go Back.");
 
-                System.out.print("COMPLETED ");
-                //Print on time status
-                if (currTask.onTime()) System.out.println("ON TIME");
-                else System.out.println("LATE");
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
             }
-            else if (!currTask.isAssigned()) System.out.println("UNASSIGNED");
-            else if (!currTask.isAccepted()) System.out.println("AWAITING RESPONSE");
-            else System.out.println("IN PROGRESS");
+            choice = sc.nextInt();
+
+            //cancel or accept task
+            if (choice == 0) System.out.println("Returning...");
+            else if (choice < taskList.size()+1) {
+                Task task = taskList.get(choice-1);
+                viewTaskDetails(task);
+            }
+            else System.out.println("Invalid option.");
+
+        } while (choice != 0);
+
+    }
+
+    //Print out all details of a task
+    private void viewTaskDetails (Task task) {
+
+        System.out.println("\nNAME: " + task.getName());
+        System.out.println("CREATOR: " + task.getCreator().getName() + " (" + task.getCreator().getDepartment() + ")");
+        if (task.isAssigned()) {
+            System.out.println("ASSIGNED TO: " + task.getAssignee().getName() + " (" + task.getAssignee().getDepartment() + ")");
+        } else {
+            System.out.println("UNASSIGNED");
         }
+        System.out.println("DESCRIPTION: " + task.getDescription());
+        
+        if (task.isCompleted()) {
+            System.out.print("COMPLETED ");
+            if (task.onTime()) System.out.println("ON TIME");
+            else System.out.println("LATE");
+            System.out.println("COMPLETED " + task.getSubmitDateTime().toLocalDate() + " @ " + task.getSubmitDateTime().toLocalTime());
+            System.out.println("COMMENTS: " + task.getComments());
+        } else {
+            System.out.println("NOT YET COMPLETED");
+            System.out.println("DUE " + task.getDeadline().toLocalDate() + " @ " + task.getDeadline().toLocalTime());
+        }
+
+        System.out.print("\nPress Enter to continue.");
+        Scanner sc2 = new Scanner(System.in);
+        sc2.nextLine();
 
     }
 
@@ -176,6 +229,48 @@ public class TaskService {
                 task.assign(employeeList.get(choice-1));
                 //Success message
                 System.out.println("Successfully assigned \"" + task.getName() + "\" to " + employeeList.get(choice-1).getName() + ". Awaiting response.");
+            }
+            else System.out.println("Invalid option.");
+
+        } while (choice < 0);
+
+        saveTasks();
+
+    }
+
+    //Manager unassigns or cancels task
+    public void cancelTask (Manager creator) {
+
+        List<Task> taskList = creator.getAssignedTasks();
+
+        int choice = -1;
+        //Begin selection of task to assign
+        do {
+            System.out.println("\nSelect task to cancel:");
+            
+            for (int i=1; i<=taskList.size(); i++) {
+                System.out.print(i + ". " + taskList.get(i-1).getName());
+                System.out.print(" (Assigned to " + taskList.get(i-1).getAssignee().getName() + "): ");
+                if (!taskList.get(i-1).isAccepted()) System.out.println("AWAITING RESPONSE");
+                else System.out.println("IN PROGRESS");
+            }
+
+            System.out.println("0: Cancel");
+            System.out.print("Choose an option: ");
+
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+
+            //cancel or assign task to employee
+            if (choice == 0) System.out.println("Returning...");
+            else if (choice < taskList.size()+1) {
+                Task task = taskList.get(choice-1);
+                task.unassign();
+                //Success message
+                System.out.println("Successfully canceled task.");
             }
             else System.out.println("Invalid option.");
 

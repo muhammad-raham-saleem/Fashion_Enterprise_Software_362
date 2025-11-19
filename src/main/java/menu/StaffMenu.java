@@ -77,7 +77,7 @@ public class StaffMenu {
             System.out.println("1. View Your Created Tasks");
             System.out.println("2. Create New Task");
             System.out.println("3. Assign Task to Employee");
-            System.out.println("4. Unassign or Cancel Task");
+            System.out.println("4. Unassign/Cancel Task");
             System.out.println("0. Cancel");
             System.out.print("Choose an option: ");
 
@@ -91,7 +91,7 @@ public class StaffMenu {
                 case 1 -> taskService.viewTasks(user_m);
                 case 2 -> taskService.createTask(user_m);
                 case 3 -> taskService.beginAssignment(user_m);
-                //case 4 -> taskService.cancelTask(user_m);
+                case 4 -> taskService.cancelTask(user_m);
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }

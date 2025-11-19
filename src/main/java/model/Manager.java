@@ -59,4 +59,15 @@ public class Manager extends Staff {
 
     }
 
+    //Return list of assigned tasks
+    public List<Task> getAssignedTasks() {
+
+        List<Task> assigned = new ArrayList<>();
+        for (Task t : tasks) {
+            if (t.isAssigned() && !t.isCompleted()) assigned.add(t);
+        }
+        return assigned;
+
+    }
+
 }

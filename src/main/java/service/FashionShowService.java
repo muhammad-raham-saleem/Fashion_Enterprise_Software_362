@@ -26,17 +26,17 @@ public class FashionShowService {
 
         System.out.println("\n--- FASHION SHOW SCHEDULING STARTED ---");
 
-        System.out.println("Products Added: " + products);
+        System.out.println("Products added: " + products);
 
         schedule.generateSchedule(products);
         
         if (!schedule.approveSchedule()) {
-            System.out.println("Schedule NOT approved. Cancelling Fashion Show.");
+            System.out.println("Schedule not approved. Cancelling Fashion Show.");
             return;
         }
 
         
-        System.out.println("Expected Attendees: " + expectedAttendance);
+        System.out.println("Expected Attendance: " + expectedAttendance);
         System.out.println("Venue: " + venue);
 
         events.addEvent(venue, date);

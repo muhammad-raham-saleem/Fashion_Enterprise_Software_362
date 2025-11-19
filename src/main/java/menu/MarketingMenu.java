@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import model.Product;
-import model.ProductRepository;
 import service.FashionShowService;
 
 public class MarketingMenu {
@@ -35,13 +33,13 @@ public class MarketingMenu {
             sc.nextLine();
 
             switch (choice) {
-                case 1 -> runFashionShow();
+                case 1 -> startFashionShowProcess();
                 case 0 -> System.out.println("Returning to Main Menu..."); 
                 default -> System.out.println("Invalid option.");
             }
         } while (choice != 0);
     }
-    private void runFashionShow(){
+    private void startFashionShowProcess(){
         System.out.println("------ RUN FASHION SHOW ------");
     
         List<String> items = new ArrayList<>();
@@ -70,10 +68,5 @@ public class MarketingMenu {
         double profit = attendance * ticketPrice;
 
         fashionShowService.runFashionShow(items, attendance, venue, profit, date);
-
-
-        
     }
-
-
 }

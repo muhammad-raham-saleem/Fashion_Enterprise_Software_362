@@ -1,6 +1,7 @@
 package service;
 
 import model.*;
+import util.FileManager;
 
 import java.util.*;
 
@@ -68,6 +69,12 @@ public class SaleService {
         return false;
     }
 
+    /**
+     * Process a return for the given product
+     * from the sales rep perspective.
+     * Saves to a batch for QC inspection
+     * @param product The product being returned
+     */
     public void processReturn(Product product) {
         System.out.println("=== RETURN PROCESS ===");
         System.out.println("Product: " + product.getName());
@@ -112,7 +119,7 @@ public class SaleService {
         finance.processReturn(product, 1); // TODO: quantity needs to come from receipt
 
         // Step 5: Create a batch for the returned item to be re-inspected by QC
-        int batchId = generateUniqueBatchId();
+        int batchId = FileManager.getNextId("data/batches.csv");
         List<Item> returnedItems = Collections.singletonList(new Item(1, product));
         ManufacturingBatch returnBatch = new ManufacturingBatch(batchId, product, returnedItems);
 
@@ -121,30 +128,6 @@ public class SaleService {
 
         System.out.println("\nReturned item added to QC batch #" + batchId + " for inspection.");
         System.out.println("=== RETURN COMPLETED ===");
-    }
-
-    /**
-     * Generate a unique batch ID by finding the highest existing ID and incrementing
-     */
-    private int generateUniqueBatchId() {
-        List<String> lines = util.FileManager.readLines("data/batches.csv");
-        int maxId = 0;
-
-        for (int i = 1; i < lines.size(); i++) { // Skip header
-            String[] parts = lines.get(i).split(",");
-            if (parts.length > 0) {
-                try {
-                    int id = Integer.parseInt(parts[0]);
-                    if (id > maxId) {
-                        maxId = id;
-                    }
-                } catch (NumberFormatException e) {
-                    // Skip invalid
-                }
-            }
-        }
-
-        return maxId + 1;
     }
 
 }

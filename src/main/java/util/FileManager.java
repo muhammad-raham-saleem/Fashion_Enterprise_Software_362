@@ -85,9 +85,34 @@ public class FileManager {
     public static boolean appendLine(String filename, String line) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             writer.println(line);
+            return true;
         } catch (IOException e) {
             System.out.println("Error appending to file: " + filename);
         }
         return false;
+    }
+
+    /**
+     * Gets the next available integer ID from a CSV file where the first column contains IDs.
+     * @param filename CSV file to read
+     * @return Next available ID
+     */
+    public static int getNextId(String filename) {
+        List<String> lines = readLines(filename);
+        java.util.Set<Integer> used = new java.util.HashSet<>();
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length > 0) {
+                try {
+                    used.add(Integer.parseInt(parts[0]));
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+        int candidate = 1;
+        while (used.contains(candidate)) {
+            candidate++;
+        }
+        return candidate;
     }
 }

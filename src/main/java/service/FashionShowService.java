@@ -5,51 +5,50 @@ import java.util.List;
 import java.util.Scanner;
 
 import model.Events;
-import model.FashionShow;
 import model.Schedule;
 
 public class FashionShowService {
-    
+
     private final Schedule schedule;
     private final Events events;
-    private final FinanceService financeService;
+    private final FinanceService finance;
 
-    public FashionShowService(Schedule schedule, Events events, FinanceService financeService){
+    public FashionShowService(Schedule schedule, Events events, FinanceService finance) {
         this.schedule = schedule;
         this.events = events;
-        this.financeService = financeService;
+        this.finance = finance;
     }
 
-    public void runFashionShow(List<String> items, int expectedAttendance, String venue, double projectedProfit, LocalDate date){
-        
-        FashionShow show = new FashionShow(schedule, events, financeService);
+    public void runFashionShow(List<String> products, int expectedAttendance,
+                               String venue, double projectedProfit, LocalDate date) {
+
         Scanner scan = new Scanner(System.in);
 
-        show.scheduleFashionShow();
-        show.inputItemsToShow(items);
-        show.generateSchedule();
+        System.out.println("\n--- FASHION SHOW SCHEDULING STARTED ---");
 
+        System.out.println("Products Added: " + products);
+
+        schedule.generateSchedule(products);
+        
         if (!schedule.approveSchedule()) {
-            System.out.println("Schedule not approved. Fashion Show cannot proceed.");
+            System.out.println("Schedule NOT approved. Cancelling Fashion Show.");
             return;
         }
 
-        show.inputExpectedIntendees(expectedAttendance);
-        show.inputVenue(venue);
+        
+        System.out.println("Expected Attendees: " + expectedAttendance);
+        System.out.println("Venue: " + venue);
 
-        System.out.println("Simulate show? (Y/N)");
+        events.addEvent(venue, date);
+
+        System.out.print("Simulate show? (Y/N): ");
         String answer = scan.nextLine();
 
-        if (answer.equalsIgnoreCase("Y")){
-            show.addProfit(projectedProfit);
-            show.addEvent(date);
-            System.out.println("Fashion Show Successfuly Completed");
+        if (answer.equalsIgnoreCase("Y")) {
+            finance.addSale(projectedProfit);
+            System.out.println("Fashion Show completed! Profit Added: " + projectedProfit);
+        } else {
+            System.out.println("Fashion Show completed without simulation.");
         }
-        
-        if (answer.equalsIgnoreCase("N")){
-            show.addEvent(date);
-            System.out.println("Fashion Show Successfuly Completed");
-        }
-
     }
 }

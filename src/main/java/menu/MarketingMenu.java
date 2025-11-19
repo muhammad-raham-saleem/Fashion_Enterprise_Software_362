@@ -1,5 +1,6 @@
 package menu;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -59,12 +60,16 @@ public class MarketingMenu {
         System.out.println("Enter venue name: ");
         String venue = sc.nextLine();
 
+        System.out.println("Enter date (yyyy-mm-dd)");
+        LocalDate date = LocalDate.parse(sc.nextLine());
+        
+
         System.out.println("Enter ticket price");
         double ticketPrice = Double.parseDouble(sc.nextLine());
 
         double profit = attendance * ticketPrice;
 
-        fashionShowService.runFashionShow(items, attendance, venue, profit);
+        fashionShowService.runFashionShow(items, attendance, venue, profit, date);
 
 
         

@@ -1,1 +1,2 @@
-event, date
+event, venue, date
+Fashion show, Marston Hall, 2025-11-20

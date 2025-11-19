@@ -28,12 +28,12 @@ public class FashionShow {
     public void inputItemsToShow(List<String> items){
     this.items = items; 
     System.out.println("Items Added:" + items);
-}
+    }
 
 
     public void addEvent(LocalDate date){
-        events.addEvent("Fashion Show", date);
-        System.out.println("Event Recorded: Fashion Show | " + date);
+        events.addEvent(this.venue, date);
+        System.out.println("Event Recorded");
     }
 
     public void generateSchedule(){

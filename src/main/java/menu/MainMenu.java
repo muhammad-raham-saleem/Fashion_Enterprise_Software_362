@@ -27,6 +27,10 @@ public class MainMenu {
     private final Events events = new Events();
     private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
     private final CampaignService campaignService = new CampaignService(sc);
+    private final VendorContractRepository vendorContractRepository = new VendorContractRepository("data/vendors.txt", "data/contracts.txt");
+    private final MaterialPrototypeRepository materialPrototypeRepository = new MaterialPrototypeRepository("data/specifications.txt", "data/prototypes.txt", "data/feedback.txt");
+    private final VendorContractService vendorContractService = new VendorContractService(sc, vendorContractRepository);
+    private final MaterialPrototypeService materialPrototypeService = new MaterialPrototypeService(sc, materialPrototypeRepository);
 
     public void start() {
         // Load data before menus
@@ -42,6 +46,8 @@ public class MainMenu {
             System.out.println("5. Shipping Department");
             System.out.println("6. Marketing Menu");
             System.out.println("7. Staff/Manager Menu");
+            System.out.println("8. Vendor Contract Management");
+            System.out.println("9. Material Prototype Development");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
 
@@ -59,6 +65,8 @@ public class MainMenu {
                 case 5 -> new ShippingDepartmentMenu(sc).start();
                 case 6 -> new MarketingMenu(sc, fashionShowService, campaignService).start();
                 case 7 -> new StaffMenu(sc, hr, taskService).start();
+                case 8 -> new VendorContractMenu(sc, vendorContractService).start();
+                case 9 -> new MaterialPrototypeMenu(sc, materialPrototypeService).start();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
             }

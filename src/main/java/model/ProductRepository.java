@@ -14,7 +14,8 @@ public record ProductRepository(String filePath) implements Repository<Product> 
         for (int i = 1; i < lines.size(); i++) {
             try {
                 products.add(parseLine(lines.get(i)));
-            } catch (Exception _) {
+            } catch (Exception e) {
+                // Ignore parsing errors
             }
         }
 

@@ -1,7 +1,9 @@
 package menu;
 
 import model.*;
+import service.OnlineOrderService;
 import service.QualityControlService;
+import service.ReceivingService;
 import util.FileManager;
 
 import java.util.HashMap;
@@ -14,9 +16,14 @@ public class WarehouseMenu {
     private QualityControlService qcService;
     private HashMap<Integer, ManufacturingBatch> batches;
 
+    private final OnlineOrderService onlineOrderService;
+    private final ReceivingService receivingService; 
+
     public WarehouseMenu(Scanner sc) {
         this.sc = sc;
         this.batches = loadAllBatches();
+        this.onlineOrderService = new OnlineOrderService(sc);
+        this.receivingService = new ReceivingService(sc, batches); 
     }
 
     public void start() {
@@ -25,6 +32,8 @@ public class WarehouseMenu {
             System.out.println("\n--- WAREHOUSE MENU ---");
             System.out.println("1. List batches");
             System.out.println("2. Review batches quality control");
+            System.out.println("3. Receive shipment from manufacturer");
+            System.out.println("4. Fulfill online order");
             System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -33,6 +42,7 @@ public class WarehouseMenu {
                 sc.next();
             }
             choice = sc.nextInt();
+            sc.nextLine(); // consume newline
 
             switch (choice) {
                 case 1 -> {
@@ -45,6 +55,7 @@ public class WarehouseMenu {
                     int batchId;
                     try {
                         batchId = sc.nextInt();
+                        sc.nextLine(); // consume newline
                     } catch (InputMismatchException e) {
                         System.out.print("Invalid batch ID. Please enter a number. ");
                         sc.next(); // Clear invalid input
@@ -58,6 +69,8 @@ public class WarehouseMenu {
                         System.out.println("Batch ID not found.");
                     }
                 }
+                case 3 -> receivingService.receiveShipmentFromManufacturer(); 
+                case 4 -> onlineOrderService.fulfillOnlineOrder();
                 case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option.");
             }
@@ -95,4 +108,3 @@ public class WarehouseMenu {
         return new ManufacturingBatch(batchId, product, items);
     }
 }
-

@@ -2,51 +2,101 @@ package service;
 
 import model.OnlineOrder;
 import model.OrderLine;
+import util.FileManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.*;
 
 /**
  * Handles the "Fulfill Online Order" use case:
- *  Select an existing online order
- *  Check / confirm lines
- *  Enter carrier + tracking
- *  Mark order as SHIPPED
- *
+ * - Load online orders from CSV file
+ * - List open orders
+ * - Select an order
+ * - Confirm fulfillment
+ * - Enter carrier + tracking
+ * - Mark order as SHIPPED and save back to CSV
  */
 public class OnlineOrderService {
+
+    private static final String ORDERS_FILE = "data/orders.csv";
 
     private final Scanner sc;
     private final List<OnlineOrder> orders = new ArrayList<>();
 
     public OnlineOrderService(Scanner sc) {
         this.sc = sc;
-        seedFakeOrders(); // TEMP: demo data so your menu actually does something
+        loadOrdersFromCsv();
     }
 
+    /**
+     * Loads online orders from data/orders.csv
+     * Expected CSV format:
+     * orderId,customerName,shippingAddress,status,trackingNumber,productId,productName,quantity
+     */
+    private void loadOrdersFromCsv() {
+        List<String> lines = FileManager.readLines(ORDERS_FILE);
+        if (lines == null || lines.size() <= 1) {
+            System.out.println("No orders found in " + ORDERS_FILE);
+            return;
+        }
 
-    //temp fake orders
-    private void seedFakeOrders() {
-        OnlineOrder o1 = new OnlineOrder("ORD-1001", "Alice Smith", "123 Main St");
-        o1.addLine(new OrderLine("P001", "Classic Jacket", 1));
-        o1.addLine(new OrderLine("P010", "Silk Scarf", 2));
+        Map<String, OnlineOrder> orderMap = new LinkedHashMap<>();
 
-        OnlineOrder o2 = new OnlineOrder("ORD-1002", "Bob Lee", "456 Oak Ave");
-        o2.addLine(new OrderLine("P005", "Leather Bag", 1));
+        // Skip header (start from i = 1)
+        for (int i = 1; i < lines.size(); i++) {
+            String line = lines.get(i).trim();
+            if (line.isEmpty()) continue;
 
-        OnlineOrder o3 = new OnlineOrder("ORD-1003", "Joe Jane", "712 Lincoln Way");
-        o2.addLine(new OrderLine("P008", "Wool Sock", 1));
+            String[] parts = line.split(",", -1); // -1 keeps empty columns
+            if (parts.length < 8) {
+                System.out.println("Skipping malformed order line: " + line);
+                continue;
+            }
 
-        orders.add(o1);
-        orders.add(o2);
-        orders.add(o3);
+            String orderId = parts[0].trim();
+            String customerName = parts[1].trim();
+            String shippingAddress = parts[2].trim();
+            String status = parts[3].trim();
+            String trackingNumber = parts[4].trim();
+            String productId = parts[5].trim();
+            String productName = parts[6].trim();
+            int quantity;
+
+            try {
+                quantity = Integer.parseInt(parts[7].trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid quantity in orders file: " + line);
+                continue;
+            }
+
+            // Get or create OnlineOrder
+            OnlineOrder order = orderMap.get(orderId);
+            if (order == null) {
+                order = new OnlineOrder(orderId, customerName, shippingAddress);
+                if (!status.isEmpty()) {
+                    order.setStatus(status);
+                }
+                if (!trackingNumber.isEmpty()) {
+                    order.setTrackingNumber(trackingNumber);
+                }
+                orderMap.put(orderId, order);
+            }
+
+            // Add line to order
+            OrderLine lineObj = new OrderLine(productId, productName, quantity);
+            order.addLine(lineObj);
+        }
+
+        orders.clear();
+        orders.addAll(orderMap.values());
     }
 
     public void showOpenOrders() {
         System.out.println("\n=== Online Orders ===");
         if (orders.isEmpty()) {
-            System.out.println("No online orders in the system yet.");
+            System.out.println("No online orders in the system.");
             return;
         }
 
@@ -65,7 +115,7 @@ public class OnlineOrderService {
             return;
         }
 
-      //show order and pick one
+        // 1. Show orders and pick one
         showOpenOrders();
         System.out.print("Enter order ID to fulfill: ");
         String id = sc.nextLine().trim();
@@ -87,11 +137,9 @@ public class OnlineOrderService {
         System.out.println("Ship To: " + order.getShippingAddress());
         System.out.println("Lines:");
         for (OrderLine line : order.getLines()) {
-            System.out.println(" - " + line.getProductId() + " | "
+            System.out.println(" - Product " + line.getProductId() + " | "
                     + line.getProductName() + " | qty " + line.getQuantity());
         }
-
-        // TODO later: check inventory and reserve stock here
 
         System.out.print("\nConfirm fulfillment of this order? (y/n): ");
         String confirm = sc.nextLine().trim().toLowerCase();
@@ -101,17 +149,18 @@ public class OnlineOrderService {
         }
 
         // 3. Enter shipping info
-        System.out.print("Enter carrier (e.g. UPS, FedEx): ");
+        System.out.print("Enter carrier (e.g., UPS, FedEx): ");
         String carrier = sc.nextLine().trim();
 
         System.out.print("Enter tracking number: ");
         String tracking = sc.nextLine().trim();
 
-        // 4. Mark as shipped
+        // 4. Mark as shipped (in memory)
         order.setTrackingNumber(tracking);
         order.setStatus("SHIPPED");
 
-        // TODO later: call shipping department / TransferService here
+        // 5. Save all orders back to CSV
+        saveOrdersToCsv();
 
         System.out.println("\nOrder " + order.getId() + " has been marked as SHIPPED.");
         System.out.println("Carrier: " + carrier);
@@ -125,5 +174,55 @@ public class OnlineOrderService {
             }
         }
         return null;
+    }
+
+    /**
+     * Writes the current in-memory orders back to data/orders.csv,
+     * overwriting the file.
+     *
+     * CSV format:
+     * orderId,customerName,shippingAddress,status,trackingNumber,productId,productName,quantity
+     */
+    private void saveOrdersToCsv() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(ORDERS_FILE))) {
+            // header
+            writer.println("orderId,customerName,shippingAddress,status,trackingNumber,productId,productName,quantity");
+
+            for (OnlineOrder order : orders) {
+                String status = order.getStatus() == null ? "" : order.getStatus();
+                String tracking = order.getTrackingNumber() == null ? "" : order.getTrackingNumber();
+
+                for (OrderLine line : order.getLines()) {
+                    String productId = line.getProductId();
+                    String productName = line.getProductName();
+                    int quantity = line.getQuantity();
+
+                    writer.println(
+                            order.getId() + "," +
+                            escape(order.getCustomerName()) + "," +
+                            escape(order.getShippingAddress()) + "," +
+                            status + "," +
+                            tracking + "," +
+                            productId + "," +
+                            escape(productName) + "," +
+                            quantity
+                    );
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error saving orders to " + ORDERS_FILE + ": " + e.getMessage());
+        }
+    }
+
+    /**
+     * CSV escape
+     */
+    private String escape(String value) {
+        if (value == null) return "";
+        if (value.contains(",")) {
+            return "\"" + value + "\"";
+        }
+        return value;
     }
 }

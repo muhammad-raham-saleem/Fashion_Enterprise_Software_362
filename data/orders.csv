@@ -1,0 +1,6 @@
+orderId,customerName,shippingAddress,status,trackingNumber,productId,productName,quantity
+ORD-1001,Alice Smith,123 Main St,READY_TO_FULFILL,,1,Classic Jacket,1
+ORD-1001,Alice Smith,123 Main St,READY_TO_FULFILL,,10,Silk Scarf,2
+ORD-1002,Bob Lee,456 Oak Ave,READY_TO_FULFILL,1000003,5,Leather Bag,1
+ORD-1003,Chris Doe,789 Pine Rd,SHIPPED,3333,3,Wool Coat,1
+ORD-1004,John dang,723 Coast Rd,SHIPPED,TRACK123,3,Wool Coat,2

@@ -1,0 +1,2 @@
+1,Goof manufacturability,4,Manufacturing,Mike Rodriguez
+2,Needs better finish,3,Design,Alice Williams

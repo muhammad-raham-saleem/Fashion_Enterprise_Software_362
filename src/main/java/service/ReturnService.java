@@ -76,40 +76,7 @@ public class ReturnService {
 
             // Load the receipt from file
             receipt = Receipt.loadByReceiptId(receiptId, productRepo);
-
-            if (receipt == null) {
-                System.out.println("ERROR: Could not load receipt from file!");
-                System.out.println("       Return denied.");
-                return;
-            }
-
-            // Verify receipt matches the product
-            if (!receipt.matchesProduct(product)) {
-                System.out.println("ERROR: Receipt does not match this product!"
-                        + "\n       Receipt is for: " + receipt.getProduct().getName()
-                        + "\n       Customer is returning: " + product.getName()
-                        + "\n       Return denied - product mismatch.");
-                return;
-            }
-
-            // Check if within return window (7 days)
-            if (!receipt.isWithinReturnWindow()) {
-                System.out.println("ERROR: Return window expired!"
-                        + "\n       Purchase date: " + receipt.getSaleDate()
-                        + "\n       Return window: 7 days from purchase"
-                        + "\n       Return denied - outside return window.");
-                return;
-            }
-
-            if (receipt.alreadyReturned()) {
-                System.out.println("ERROR: Receipt has already been used for a return!"
-                        + "\n       Return denied - duplicate return attempt.");
-                return;
-            }
-
-            System.out.println("  Receipt validated successfully!"
-                    + "\n  Purchase Date: " + receipt.getSaleDate()
-                    + "\n  Original Amount: $" + receipt.getAmount());
+            if (invalidReceipt(product, receipt)) return;
 
         } else {
             // No receipt - attempt alternative verification
@@ -155,5 +122,49 @@ public class ReturnService {
 
         System.out.println("Added to QC batch #" + batchId + " for inspection.");
         System.out.println("=== RETURN COMPLETED ===");
+    }
+
+    /**
+     * Validate the receipt for the return
+     *
+     * @param product The product being returned
+     * @param receipt The receipt to validate
+     * @return true if invalid
+     */
+    private static boolean invalidReceipt(Product product, Receipt receipt) {
+        if (receipt == null) {
+            System.out.println("ERROR: Could not load receipt from file!");
+            System.out.println("       Return denied.");
+            return true;
+        }
+
+        // Verify receipt matches the product
+        if (!receipt.matchesProduct(product)) {
+            System.out.println("ERROR: Receipt does not match this product!"
+                    + "\n       Receipt is for: " + receipt.getProduct().getName()
+                    + "\n       Customer is returning: " + product.getName()
+                    + "\n       Return denied - product mismatch.");
+            return true;
+        }
+
+        // Check if within return window (7 days)
+        if (!receipt.isWithinReturnWindow()) {
+            System.out.println("ERROR: Return window expired!"
+                    + "\n       Purchase date: " + receipt.getSaleDate()
+                    + "\n       Return window: 7 days from purchase"
+                    + "\n       Return denied - outside return window.");
+            return true;
+        }
+
+        if (receipt.alreadyReturned()) {
+            System.out.println("ERROR: Receipt has already been used for a return!"
+                    + "\n       Return denied - duplicate return attempt.");
+            return true;
+        }
+
+        System.out.println("  Receipt validated successfully!"
+                + "\n  Purchase Date: " + receipt.getSaleDate()
+                + "\n  Original Amount: $" + receipt.getAmount());
+        return false;
     }
 }

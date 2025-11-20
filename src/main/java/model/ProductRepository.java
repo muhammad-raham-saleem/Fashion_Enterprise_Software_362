@@ -59,4 +59,13 @@ public record ProductRepository(String filePath) implements Repository<Product> 
         double price = Double.parseDouble(parts[2]);
         return new Product(id, name, price);
     }
+
+    public void saveAll(List<Product> products) {
+        List<String> lines = new ArrayList<>();
+        lines.add("id,name,price");
+        for (Product p : products) {
+            lines.add(p.getId() + "," + p.getName() + "," + p.getPrice());
+        }
+        FileManager.writeLines(filePath, lines);
+    }
 }

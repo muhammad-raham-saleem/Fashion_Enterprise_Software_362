@@ -22,6 +22,8 @@ public class MarketingMenu {
         do {
             System.out.println("\n--- MARKETING MENU ---");
             System.out.println("1. Run Fashion Show");
+            System.out.println("2. Create campaign");
+            System.out.println("3. List campaigns");
             System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -34,14 +36,15 @@ public class MarketingMenu {
 
             switch (choice) {
                 case 1 -> startFashionShowProcess();
-                case 0 -> System.out.println("Returning to Main Menu..."); 
+                case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option.");
             }
         } while (choice != 0);
     }
-    private void startFashionShowProcess(){
+
+    private void startFashionShowProcess() {
         System.out.println("------ RUN FASHION SHOW ------");
-    
+
         List<String> items = new ArrayList<>();
         String item;
 
@@ -60,7 +63,7 @@ public class MarketingMenu {
 
         System.out.println("Enter date (yyyy-mm-dd)");
         LocalDate date = LocalDate.parse(sc.nextLine());
-        
+
 
         System.out.println("Enter ticket price");
         double ticketPrice = Double.parseDouble(sc.nextLine());

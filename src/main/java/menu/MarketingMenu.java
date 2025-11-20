@@ -32,10 +32,7 @@ public class MarketingMenu implements Menu {
         int choice;
         do {
             System.out.println("\n========== MARKETING MENU ==========");
-            System.out.println("1. Run Fashion Show");
-            System.out.println("2. Campaign Management");
-            System.out.println("0. Return to Main Menu");
-            System.out.print("Choose an option: ");
+            displayOptions();
 
             while (!sc.hasNextInt()) {
                 System.out.print("Enter a valid number: ");

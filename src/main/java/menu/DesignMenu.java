@@ -5,7 +5,7 @@ import service.*;
 import util.FileManager;
 import java.util.Scanner;
 
-public class DesignMenu {
+public class DesignMenu implements Menu {
     private final Scanner sc;
     private final SketchService sketchService;
     private final MaterialService materialService;
@@ -24,18 +24,26 @@ public class DesignMenu {
         this.repo = repo;
     }
 
+    @Override
+    public MenuOption[] getOptions() {
+        return new MenuOption[] {
+            new MenuOption(1, "Create Sketch", sketchService::createSketch),
+            new MenuOption(2, "Select Material", materialService::selectMaterial),
+            new MenuOption(3, "Verify Fabric Availability", manufacturingService::verifyAvailability),
+            new MenuOption(4, "Confirm Production Costs", costService::confirmCosts),
+            new MenuOption(5, "View All Sketches", sketchService::viewSketches),
+            new MenuOption(6, "View All Materials", materialService::viewMaterials),
+            new MenuOption(7, "Save Data", () -> FileManager.saveData(repo.getSketches(), repo.getMaterials())),
+            new MenuOption(0, "Return to Main Menu", () -> System.out.println("Returning to Main Menu..."))
+        };
+    }
+
+    @Override
     public void start() {
         int choice;
         do {
             System.out.println("\n--- DESIGN MENU ---");
-            System.out.println("1. Create Sketch");
-            System.out.println("2. Select Material");
-            System.out.println("3. Verify Fabric Availability");
-            System.out.println("4. Confirm Production Costs");
-            System.out.println("5. View All Sketches");
-            System.out.println("6. View All Materials");
-            System.out.println("7. Save Data");
-            System.out.println("0. Return to Main Menu");
+            displayOptions();
             System.out.print("Choose an option: ");
 
             while (!sc.hasNextInt()) {
@@ -43,18 +51,9 @@ public class DesignMenu {
                 sc.next();
             }
             choice = sc.nextInt();
+            sc.nextLine();
 
-            switch (choice) {
-                case 1 -> sketchService.createSketch();
-                case 2 -> materialService.selectMaterial();
-                case 3 -> manufacturingService.verifyAvailability();
-                case 4 -> costService.confirmCosts();
-                case 5 -> sketchService.viewSketches();
-                case 6 -> materialService.viewMaterials();
-                case 7 -> FileManager.saveData(repo.getSketches(), repo.getMaterials());
-                case 0 -> System.out.println("Returning to Main Menu...");
-                default -> System.out.println("Invalid option.");
-            }
+            executeOption(choice);
         } while (choice != 0);
     }
 }

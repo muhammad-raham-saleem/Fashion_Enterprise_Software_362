@@ -4,7 +4,7 @@ import model.HR;
 import java.util.Scanner;
 import service.HRService;
 
-public class HRMenu {
+public class HRMenu implements Menu {
 
     private final Scanner sc;
     private final HR hr;
@@ -16,14 +16,22 @@ public class HRMenu {
         this.hrService = hrs;
     }
 
+    @Override
+    public MenuOption[] getOptions() {
+        return new MenuOption[] {
+            new MenuOption(1, "View Staff List", hrService::viewStaffList),
+            new MenuOption(2, "Hire Staff", hrService::hireStaff),
+            new MenuOption(0, "Return to Main Menu", () -> System.out.println("Returning to Main Menu..."))
+        };
+    }
+
+    @Override
     public void start() {
 
         int choice;
         do {
             System.out.println("\n--- HR MENU ---");
-            System.out.println("1. View Staff List");
-            System.out.println("2. Hire Staff");
-            System.out.println("0. Return to Main Menu");
+            displayOptions();
             System.out.print("Choose an option: ");
 
             while (!sc.hasNextInt()) {
@@ -31,13 +39,9 @@ public class HRMenu {
                 sc.next();
             }
             choice = sc.nextInt();
+            sc.nextLine();
 
-            switch (choice) {
-                case 1 -> hrService.viewStaffList();
-                case 2 -> hrService.hireStaff();
-                case 0 -> System.out.println("Returning to Main Menu...");
-                default -> System.out.println("Invalid option.");
-            }
+            executeOption(choice);
         } while (choice != 0);
 
     }

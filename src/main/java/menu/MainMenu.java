@@ -17,12 +17,15 @@ public class MainMenu {
     private final CostService costService = new CostService(designRepo, sc);
     private final Inventory inventory = new Inventory("data/inventory.txt");
     private final FinanceService financeService = new FinanceService("data/finance.txt");
-    private final SaleService saleService = new SaleService(inventory, financeService);
+    private final SaleService saleService = new SaleService(sc, inventory, financeService);
+    private final ReturnService returnService = new ReturnService(sc, financeService);
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
-    private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
     private final TaskService taskService = new TaskService(hr, sc, "data/tasks.txt");
-    
+    private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
+    private final Schedule schedule = new Schedule();
+    private final Events events = new Events();
+    private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
 
     public void start() {
         // Load data before menus
@@ -36,7 +39,8 @@ public class MainMenu {
             System.out.println("3. Sales Department");
             System.out.println("4. HR Department");
             System.out.println("5. Shipping Department");
-            System.out.println("6. Staff/Manager Menu");
+            System.out.println("6. Marketing Menu");
+            System.out.println("7. Staff/Manager Menu");
             System.out.println("0. Exit");
             System.out.print("Choose an option: ");
 
@@ -49,11 +53,11 @@ public class MainMenu {
             switch (choice) {
                 case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
                 case 2 -> new WarehouseMenu(sc).start();
-                case 3 -> new SalesMenu(sc, saleService).start();
+                case 3 -> new SalesMenu(sc, saleService, returnService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 5 -> new ShippingDepartmentMenu(sc).start();
-                case 6 -> new StaffMenu(sc, hr, taskService).start();
-
+                case 6 -> new MarketingMenu(sc, fashionShowService).start();
+                case 7 -> new StaffMenu(sc, hr, taskService).start();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
             }

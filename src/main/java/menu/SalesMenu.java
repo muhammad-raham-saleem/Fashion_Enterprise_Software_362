@@ -24,6 +24,7 @@ public class SalesMenu {
         do {
             System.out.println("\n--- SALES MENU ---");
             System.out.println("1. Start Sale");
+            System.out.println("2. Update Product Price");
             System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -45,6 +46,9 @@ public class SalesMenu {
                         break;
                     }
                     saleService.completeSale(product);
+                }
+                case 2 -> {
+                    //TODO usecase update product
                 }
                 case 0 -> System.out.println("Returning to Main Menu..."); 
                 default -> System.out.println("Invalid option.");

@@ -6,7 +6,7 @@ import util.FileManager;
 
 import java.util.Scanner;
 
-public class MainMenu {
+public class MainMenu implements Menu {
     private final Scanner sc = new Scanner(System.in);
 
     // Shared resources (repositories and services)
@@ -32,44 +32,37 @@ public class MainMenu {
     private final VendorContractService vendorContractService = new VendorContractService(sc, vendorContractRepository);
     private final MaterialPrototypeService materialPrototypeService = new MaterialPrototypeService(sc, materialPrototypeRepository);
 
+    @Override
+    public MenuOption[] getOptions() {
+        return new MenuOption[]{
+                new MenuOption(1, "Design Department", () -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start()),
+                new MenuOption(2, "Warehouse Department", () -> new WarehouseMenu(sc).start()),
+                new MenuOption(3, "Sales Department", () -> new SalesMenu(sc, saleService, returnService).start()),
+                new MenuOption(4, "HR Department", () -> new HRMenu(sc, hr, hrService).start()),
+                new MenuOption(5, "Shipping Department", shipMenu::start),
+                new MenuOption(6, "Marketing Menu", () -> new MarketingMenu(sc, fashionShowService, campaignService).start()),
+                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService).start()),
+                new MenuOption(8, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
+                new MenuOption(9, "Vendor Contract", () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),
+                new MenuOption(0, "Exit", () -> System.out.println("Exiting system..."))
+        };
+    }
+
+    @Override
     public void start() {
         // Load data before menus
         FileManager.loadData(designRepo.getSketches(), designRepo.getMaterials());
 
         int choice;
         do {
-            System.out.println("\n=== MAIN COMPANY MENU ===");
-            System.out.println("1. Design Department");
-            System.out.println("2. Warehouse Department");
-            System.out.println("3. Sales Department");
-            System.out.println("4. HR Department");
-            System.out.println("5. Shipping Department");
-            System.out.println("6. Marketing Menu");
-            System.out.println("7. Staff/Manager Menu");
-            System.out.println("8. Vendor Contract Management");
-            System.out.println("9. Material Prototype Development");
-            System.out.println("0. Exit");
-            System.out.print("Choose an option: ");
+            displayOptions();
 
             while (!sc.hasNextInt()) {
                 System.out.print("Enter a valid number: ");
                 sc.next();
             }
             choice = sc.nextInt();
-
-            switch (choice) {
-                case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
-                case 2 -> new WarehouseMenu(sc).start();
-                case 3 -> new SalesMenu(sc, saleService, returnService).start();
-                case 4 -> new HRMenu(sc, hr, hrService).start();
-                case 5 -> new ShippingDepartmentMenu(sc).start();
-                case 6 -> new MarketingMenu(sc, fashionShowService, campaignService).start();
-                case 7 -> new StaffMenu(sc, hr, taskService).start();
-                case 8 -> new VendorContractMenu(sc, vendorContractService).start();
-                case 9 -> new MaterialPrototypeMenu(sc, materialPrototypeService).start();
-                case 0 -> System.out.println("Exiting system...");
-                default -> System.out.println("Invalid option. Try again.");
-            }
+            executeOption(choice);
 
         } while (choice != 0);
 

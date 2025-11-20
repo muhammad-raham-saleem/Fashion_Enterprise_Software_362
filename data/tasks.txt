@@ -1,0 +1,30 @@
+BEGIN TASK
+CREATOR_ID ~ 1
+ASSIGNEE_ID ~ 2
+NAME ~ Create a new design sketch
+DESCRIPTION ~ We need new designs for our upcoming collection.
+DEADLINE ~ 2025-11-25T16:10
+ACCEPTED ~ true
+COMPLETED ~ false
+END TASK
+
+BEGIN TASK
+CREATOR_ID ~ 1
+ASSIGNEE_ID ~ 4
+NAME ~ Review new design sketches
+DESCRIPTION ~ We have some new sketches made and I'm curious if there are any improvements you think would be benefitial.
+DEADLINE ~ 2025-11-24T17:00
+ACCEPTED ~ false
+COMPLETED ~ false
+END TASK
+
+BEGIN TASK
+CREATOR_ID ~ 1
+ASSIGNEE_ID ~ -1
+NAME ~ Check design materials
+DESCRIPTION ~ Ensure we have all the materials we need for our upcoming desgin plans.
+DEADLINE ~ 2036-08-12T10:10
+ACCEPTED ~ false
+COMPLETED ~ false
+END TASK
+

@@ -14,11 +14,11 @@ public class HRService {
         this.hr = hr;
         this.sc = sc;
         this.filename = f;
+        loadStaff();
     }
 
     public void viewStaffList() {
 
-        loadStaff();
         if (this.hr.getStaff().isEmpty()) System.out.println("No staff hired.");
         else {
             for (Staff s : this.hr.getStaff()) {
@@ -31,15 +31,16 @@ public class HRService {
         
     }
 
-    public Staff createStaff (String name, String dep, String role, int salary) {
+    public Staff createStaff (String name, String dep, String role, int salary, boolean isManager) {
 
         Staff newStaff;
-        if (role.toLowerCase().contains("manager")) {
+        if (isManager) {
             newStaff = new Manager(name, dep, role, salary);
         } else {
             newStaff = new Staff(name, dep, role, salary);
         }
-        hr.getStaff().add(newStaff);
+        
+        hr.addStaff(newStaff);
         return newStaff;
 
     }
@@ -56,7 +57,7 @@ public class HRService {
         System.out.println("Enter " + name + "'s salary:");
         int salary = sc.nextInt();
 
-        createStaff(name, department, role, salary);
+        createStaff(name, department, role, salary, false);
         saveStaff();
 
     }
@@ -79,11 +80,20 @@ public class HRService {
 
             String [] parts = line.split(", ");
             String name = parts[0];
-            String dep = parts[1];
-            String role = parts[2];
-            int salary = Integer.parseInt(parts[3]);
+            String dep = parts[2];
+            String role = parts[3];
+            int salary = Integer.parseInt(parts[4]);
+            boolean isManager = Boolean.parseBoolean(parts[5]);
 
-            createStaff(name, dep, role, salary); 
+            //Create staff from file
+            Staff newStaff = createStaff(name, dep, role, salary, isManager); 
+            //If not manager, set this staff member's manager
+            if (!isManager) {
+                int manager_id = Integer.parseInt(parts[6]);
+                Manager man = (Manager) hr.getStaffById(manager_id);
+                newStaff.setManager(man);
+                man.addEmployee(newStaff);
+            }
         } 
     }
 

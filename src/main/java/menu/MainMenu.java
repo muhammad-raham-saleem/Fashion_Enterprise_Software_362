@@ -21,10 +21,12 @@ public class MainMenu {
     private final ReturnService returnService = new ReturnService(sc, financeService);
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
+    private final TaskService taskService = new TaskService(hr, sc, "data/tasks.txt");
     private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
     private final Schedule schedule = new Schedule();
     private final Events events = new Events();
     private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
+    private final CampaignService campaignService = new CampaignService(sc);
 
     public void start() {
         // Load data before menus
@@ -39,8 +41,9 @@ public class MainMenu {
             System.out.println("4. HR Department");
             System.out.println("5. Shipping Department");
             System.out.println("6. Marketing Menu");
+            System.out.println("7. Staff/Manager Menu");
             System.out.println("0. Exit");
-            System.out.print("Choose a department: ");
+            System.out.print("Choose an option: ");
 
             while (!sc.hasNextInt()) {
                 System.out.print("Enter a valid number: ");
@@ -54,8 +57,8 @@ public class MainMenu {
                 case 3 -> new SalesMenu(sc, saleService, returnService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 5 -> new ShippingDepartmentMenu(sc).start();
-                case 6 -> new MarketingMenu(sc, fashionShowService).start();
-
+                case 6 -> new MarketingMenu(sc, fashionShowService, campaignService).start();
+                case 7 -> new StaffMenu(sc, hr, taskService).start();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
             }
@@ -65,5 +68,3 @@ public class MainMenu {
         sc.close();
     }
 }
-
-

@@ -1,6 +1,6 @@
 package service;
 
-import util.logManager;
+import util.LogManager;
 
 
 import model.Product;
@@ -23,8 +23,8 @@ public class ProductService {
     public void updatePrice(Product product, double newPrice){
         double oldPrice = product.getPrice();
         product.setPrice(newPrice);
-
-        
+        //TODO Update the product.txt with the new price
+        logManager.logPriceChange(product.getId(), oldPrice, newPrice);
     }
     
 }

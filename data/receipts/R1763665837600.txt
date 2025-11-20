@@ -1,0 +1,10 @@
+----------RECEIPT----------
+Receipt ID: R1763665837600
+Date: 2025-11-20 13:10:37
+Product ID: 2
+Item: Fashion Pants
+Price: $99.99
+Total Paid: $99.99
+Payment Method: Card
+---------------------------
+RETURNED

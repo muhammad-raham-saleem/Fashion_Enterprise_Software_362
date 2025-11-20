@@ -48,14 +48,15 @@ public class SalesMenu {
 
                     if (product == null) {
                         System.out.println("Product doesn't exist.");
+                        productRepo.getAll().forEach(p -> System.out.println(p.getId() + ": " + p.getName()));
                         break;
                     }
                     saleService.completeSale(product);
                 }
                 case 2 -> {
                     System.out.println("List of all products");
-                    for (Product p : productRepo.getAll()){
-                        System.out.println(p.getId() + ": " +p.getName() + " $" + p.getPrice());
+                    for (Product p : productRepo.getAll()) {
+                        System.out.println(p.getId() + ": " + p.getName() + " $" + p.getPrice());
                     }
                     System.out.println("Enter productID to change.");
                     int id = sc.nextInt();
@@ -63,11 +64,11 @@ public class SalesMenu {
 
                     Product product = ProductService.findProductByID(id);
 
-                    if (product == null){
+                    if (product == null) {
                         System.out.println("Product Not Found. Update cancelled");
                         break;
                     }
-                    System.out.println("Enter new price for: " +product.getName());
+                    System.out.println("Enter new price for: " + product.getName());
                     double newPrice = sc.nextDouble();
                     ProductService.updatePrice(product, newPrice);
                 }

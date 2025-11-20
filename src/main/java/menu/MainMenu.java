@@ -57,7 +57,7 @@ public class MainMenu {
                 case 3 -> new SalesMenu(sc, saleService, returnService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 5 -> new ShippingDepartmentMenu(sc).start();
-                case 6 -> new MarketingMenu(sc, fashionShowService).start();
+                case 6 -> new MarketingMenu(sc, fashionShowService, campaignService).start();
                 case 7 -> new StaffMenu(sc, hr, taskService).start();
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");

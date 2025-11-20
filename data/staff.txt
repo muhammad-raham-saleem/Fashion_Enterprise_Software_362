@@ -1,9 +1,21 @@
 name, id, department, role, salary, isManager, manager
-John, 1, Finance, Manager, 80000, true
-Bob, 2, Finance, Accountant, 50000, false, 1
-Frank, 3, Finance, Accountant, 50000, false, 1
-Jimmy, 4, Finance, Accountant, 50000, false, 1
-Mike, 5, Manufacturing, Manager, 70000, true
-Joe, 6, Manufacturing, Machine Operator, 50000, false, 5
-Andrew, 7, Manufacturing, Machine Operator, 50000, false, 5
-Bill, 8, Manufacturing, Machine Operator, 50000, false, 5
+John, 1, Design, Lead Designer, 80000, true
+Bob, 2, Design, Graphic Designer, 60000, false, 1
+Frank, 3, Design, Graphic Designer, 60000, false, 1
+Jimmy, 4, Design, Graphic Designer, 60000, false, 1
+Mike, 5, Warehouse, Warehouse Manager, 70000, true
+Joe, 6, Warehouse, Machine Operator, 50000, false, 5
+Andrew, 7, Warehouse, Machine Operator, 50000, false, 5
+Bill, 8, Warehouse, Machine Operator, 50000, false, 5
+Steve, 9, Sales, Sales Manager, 80000, true
+Andy, 10, Sales, Sales Representative, 60000, false, 9
+Daniel, 11, Sales, Sales Representative, 60000, false, 9
+Charles, 12, Sales, Sales Representative, 60000, false, 9
+Nick, 13, Shipping, Shipping Manager, 80000, true
+Sam, 14, Shipping, Shipping Associate, 60000, false, 13
+Tim, 15, Shipping, Shipping Associate, 60000, false, 13
+Alex, 16, Shipping, Shipping Associate, 60000, false, 13
+Mark, 17, Marketing, Marketing Director, 70000, true
+Ben, 18, Marketing, Marketing Assistant, 50000, false, 17
+Larry, 19, Marketing, Marketing Assistant, 50000, false, 17
+Ted, 20, Marketing, Marketing Assistant, 50000, false, 17

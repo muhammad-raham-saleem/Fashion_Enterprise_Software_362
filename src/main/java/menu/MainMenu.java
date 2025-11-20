@@ -26,6 +26,7 @@ public class MainMenu {
     private final Schedule schedule = new Schedule();
     private final Events events = new Events();
     private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
+    private final CampaignService campaignService = new CampaignService(sc);
 
     public void start() {
         // Load data before menus
@@ -67,5 +68,3 @@ public class MainMenu {
         sc.close();
     }
 }
-
-

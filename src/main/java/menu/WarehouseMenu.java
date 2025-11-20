@@ -1,6 +1,7 @@
 package menu;
 
 import model.*;
+import service.OnlineOrderService;
 import service.QualityControlService;
 import util.FileManager;
 
@@ -14,9 +15,12 @@ public class WarehouseMenu {
     private QualityControlService qcService;
     private HashMap<Integer, ManufacturingBatch> batches;
 
+    private final OnlineOrderService onlineOrderService; // NEW
+
     public WarehouseMenu(Scanner sc) {
         this.sc = sc;
         this.batches = loadAllBatches();
+        this.onlineOrderService = new OnlineOrderService(sc); // NEW
     }
 
     public void start() {
@@ -25,6 +29,7 @@ public class WarehouseMenu {
             System.out.println("\n--- WAREHOUSE MENU ---");
             System.out.println("1. List batches");
             System.out.println("2. Review batches quality control");
+            System.out.println("3. Fulfill online order");      // NEW
             System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -33,6 +38,7 @@ public class WarehouseMenu {
                 sc.next();
             }
             choice = sc.nextInt();
+            sc.nextLine(); // IMPORTANT: consume newline so nextLine() works
 
             switch (choice) {
                 case 1 -> {
@@ -45,6 +51,7 @@ public class WarehouseMenu {
                     int batchId;
                     try {
                         batchId = sc.nextInt();
+                        sc.nextLine(); // consume newline
                     } catch (InputMismatchException e) {
                         System.out.print("Invalid batch ID. Please enter a number. ");
                         sc.next(); // Clear invalid input
@@ -58,6 +65,7 @@ public class WarehouseMenu {
                         System.out.println("Batch ID not found.");
                     }
                 }
+                case 3 -> onlineOrderService.fulfillOnlineOrder(); // NEW
                 case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option.");
             }
@@ -95,4 +103,3 @@ public class WarehouseMenu {
         return new ManufacturingBatch(batchId, product, items);
     }
 }
-

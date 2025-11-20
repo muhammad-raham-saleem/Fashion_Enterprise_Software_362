@@ -71,7 +71,7 @@ public class ReceivingService {
             // New batch object
             ManufacturingBatch newBatch = new ManufacturingBatch(newBatchId, product, items);
 
-            // Add to in memory map
+            // Add to inmemory map
             batches.put(newBatchId, newBatch);
 
             // Status column default (matches batches.csv: batchId,productId,quantity,status)

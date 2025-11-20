@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 import model.Product;
 import model.ProductRepository;
+import service.FinanceService;
+import service.ReturnService;
 import service.SaleService;
 import util.FileManager;
 
@@ -12,10 +14,12 @@ public class SalesMenu {
     private final Scanner sc;
 
     private final SaleService saleService;
+    private final ReturnService returnService;
 
-    public SalesMenu(Scanner sc, SaleService saleService) {
+    public SalesMenu(Scanner sc, SaleService saleService, ReturnService returnService) {
         this.sc = sc;
         this.saleService = saleService;
+        this.returnService = returnService;
     }
 
     public void start() {
@@ -41,7 +45,7 @@ public class SalesMenu {
                     String productName = sc.nextLine();
                     Product product = productRepo.findByName(productName);
 
-                    if (product == null){
+                    if (product == null) {
                         System.out.println("Product doesn't exist.");
                         break;
                     }
@@ -52,13 +56,13 @@ public class SalesMenu {
                     String productName = sc.nextLine();
                     Product product = productRepo.findByName(productName);
 
-                    if (product == null){
+                    if (product == null) {
                         System.out.println("Product doesn't exist.");
                         break;
                     }
-                    saleService.processReturn(product);
+                    returnService.processReturn(product);
                 }
-                case 0 -> System.out.println("Returning to Main Menu..."); 
+                case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option.");
             }
         } while (choice != 0);

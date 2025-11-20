@@ -6,15 +6,14 @@ import util.FileManager;
 import java.util.*;
 
 public class SaleService {
-    private final Scanner scan = new Scanner(System.in);
+    private final Scanner scan;
     private final Inventory inventory;
     private final FinanceService finance;
-    private final ProductRepository productRepo;
 
-    public SaleService(Inventory inventory, FinanceService finance) {
+    public SaleService(Scanner scan, Inventory inventory, FinanceService finance) {
+        this.scan = scan;
         this.inventory = inventory;
         this.finance = finance;
-        this.productRepo = new ProductRepository("data/products.txt");
     }
 
     public void completeSale(Product product) {
@@ -68,101 +67,5 @@ public class SaleService {
 
         System.out.println("Invalid payment method!");
         return false;
-    }
-
-    /**
-     * Process a return for the given product
-     * from the sales rep perspective.
-     * Saves to a batch for QC inspection
-     *
-     * @param product The product being returned
-     */
-    public void processReturn(Product product) {
-        System.out.println("=== RETURN PROCESS ===");
-        System.out.println("Product: " + product.getName());
-        System.out.println("Price: $" + product.getPrice());
-
-        Receipt receipt;
-
-        // Check for receipt and validate it
-        System.out.println("\nDoes customer have receipt? (y/n)");
-        String hasReceiptInput = scan.nextLine();
-
-        if (hasReceiptInput.equalsIgnoreCase("y")) {
-            System.out.print("Enter receipt ID (format: R<timestamp>): ");
-            String receiptId = scan.nextLine().trim();
-
-            // Load the receipt from file
-            receipt = Receipt.loadByReceiptId(receiptId, productRepo);
-
-            if (receipt == null) {
-                System.out.println("ERROR: Could not load receipt from file!");
-                System.out.println("Return denied.");
-                return;
-            }
-
-            // Verify receipt matches the product
-            if (!receipt.matchesProduct(product)) {
-                System.out.println("ERROR: Receipt does not match this product!"
-                        + "Receipt is for: " + receipt.getProduct().getName()
-                        + "Customer is returning: " + product.getName()
-                        + "Return denied - product mismatch.");
-                return;
-            }
-
-            // Check if within return window (7 days)
-            if (!receipt.isWithinReturnWindow()) {
-                System.out.println("ERROR: Return window expired!"
-                        + "Purchase date: " + receipt.getSaleDate()
-                        + "Return window: 7 days from purchase"
-                        + "Return denied - outside return window.");
-                return;
-            }
-
-            System.out.println("  Receipt validated successfully!"
-                    + "  Purchase Date: " + receipt.getSaleDate()
-                    + "  Original Amount: $" + receipt.getAmount());
-
-        } else {
-            // No receipt - attempt alternative verification
-            System.out.println("\nAttempting to verify purchase without receipt...");
-            System.out.println("Enter customer email or phone number:");
-            String customerInfo = scan.nextLine();
-
-            System.out.println("Searching for purchases by: " + customerInfo
-                    + "Return denied - no proof of purchase.");
-            return;
-        }
-
-        // Inspect for damage
-        System.out.println("\nInspecting product condition...");
-        System.out.println("Is product damaged? (y/n)");
-        String isDamaged = scan.nextLine();
-
-        if (isDamaged.equalsIgnoreCase("y")) {
-            System.out.println("Product is damaged. Return denied.");
-            return;
-        }
-
-        // Refund processing
-        double refundAmount = product.getPrice();
-        System.out.println("\nProcess refund? (y/n)");
-        String refundConfirm = scan.nextLine();
-        if (!refundConfirm.equalsIgnoreCase("y")) {
-            System.out.println("Refund cancelled by operator.");
-            return;
-        }
-
-        finance.processReturn(product, 1);
-        System.out.println("Refunded $" + refundAmount + " to method: " + receipt.getPaymentMethod());
-
-        // QC batch registration
-        int batchId = FileManager.getNextId("data/batches.csv");
-        List<Item> returnedItems = Collections.singletonList(new Item(1, product));
-        ManufacturingBatch returnBatch = new ManufacturingBatch(batchId, product, returnedItems);
-        returnBatch.saveToBatchFile();
-
-        System.out.println("Added to QC batch #" + batchId + " for inspection.");
-        System.out.println("=== RETURN COMPLETED ===");
     }
 }

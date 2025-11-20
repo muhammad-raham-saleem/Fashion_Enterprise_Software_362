@@ -17,11 +17,12 @@ public class MainMenu {
     private final CostService costService = new CostService(designRepo, sc);
     private final Inventory inventory = new Inventory("data/inventory.txt");
     private final FinanceService financeService = new FinanceService("data/finance.txt");
-    private final SaleService saleService = new SaleService(inventory, financeService);
+    private final SaleService saleService = new SaleService(sc, inventory, financeService);
+    private final ReturnService returnService = new ReturnService(sc, financeService);
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
     private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
-    
+
 
     public void start() {
         // Load data before menus
@@ -45,9 +46,10 @@ public class MainMenu {
             choice = sc.nextInt();
 
             switch (choice) {
-                case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
+                case 1 ->
+                        new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
                 case 2 -> new WarehouseMenu(sc).start();
-                case 3 -> new SalesMenu(sc, saleService).start();
+                case 3 -> new SalesMenu(sc, saleService, returnService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 5 -> new ShippingDepartmentMenu(sc).start();
 

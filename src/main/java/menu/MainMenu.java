@@ -25,6 +25,7 @@ public class MainMenu {
     private final Schedule schedule = new Schedule();
     private final Events events = new Events();
     private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
+    private final CampaignService campaignService = new CampaignService(sc);
 
     public void start() {
         // Load data before menus
@@ -49,12 +50,13 @@ public class MainMenu {
             choice = sc.nextInt();
 
             switch (choice) {
-                case 1 -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
+                case 1 ->
+                        new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start();
                 case 2 -> new WarehouseMenu(sc).start();
                 case 3 -> new SalesMenu(sc, saleService, returnService).start();
                 case 4 -> new HRMenu(sc, hr, hrService).start();
                 case 5 -> new ShippingDepartmentMenu(sc).start();
-                case 6 -> new MarketingMenu(sc, fashionShowService).start();
+                case 6 -> new MarketingMenu(sc, fashionShowService, campaignService).start();
 
                 case 0 -> System.out.println("Exiting system...");
                 default -> System.out.println("Invalid option. Try again.");
@@ -65,5 +67,3 @@ public class MainMenu {
         sc.close();
     }
 }
-
-

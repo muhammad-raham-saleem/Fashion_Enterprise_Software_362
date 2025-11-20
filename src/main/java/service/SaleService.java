@@ -6,18 +6,20 @@ import util.FileManager;
 import java.util.*;
 
 public class SaleService {
-    private Scanner scan = new Scanner(System.in);
-    private Inventory inventory;
-    private FinanceService finance;
+    private final Scanner scan = new Scanner(System.in);
+    private final Inventory inventory;
+    private final FinanceService finance;
+    private final ProductRepository productRepo;
 
-    public SaleService(Inventory inventory, FinanceService finance){
+    public SaleService(Inventory inventory, FinanceService finance) {
         this.inventory = inventory;
         this.finance = finance;
+        this.productRepo = new ProductRepository("data/products.txt");
     }
 
-    public void completeSale(Product product){
+    public void completeSale(Product product) {
 
-        if(!inventory.hasStock(product.getId())){
+        if (!inventory.hasStock(product.getId())) {
             System.out.println("Item is out of stock");
             return;
         }
@@ -31,11 +33,11 @@ public class SaleService {
 
         boolean success = processPayment(paymentMethod, product.getPrice());
 
-        if (!success){
+        if (!success) {
             System.out.println("Payment failed. Sale cancelled");
-            
+
             return;
-            
+
         }
 
         inventory.reduceStock(product.getId());
@@ -55,8 +57,7 @@ public class SaleService {
                 return false;
             }
             return true;
-        }
-        else if (method.equalsIgnoreCase("cash")) {
+        } else if (method.equalsIgnoreCase("cash")) {
             // Simulate counterfeit cash
             if (Math.random() < 0.02) { // 2% chance counterfeit
                 System.out.println("Counterfeit cash detected!");
@@ -73,6 +74,7 @@ public class SaleService {
      * Process a return for the given product
      * from the sales rep perspective.
      * Saves to a batch for QC inspection
+     *
      * @param product The product being returned
      */
     public void processReturn(Product product) {
@@ -80,27 +82,59 @@ public class SaleService {
         System.out.println("Product: " + product.getName());
         System.out.println("Price: $" + product.getPrice());
 
-        // Step 1: Check for receipt
-        System.out.println("\nDoes customer have receipt? (y/n)");
-        String hasReceipt = scan.nextLine();
+        Receipt receipt;
 
-        if (!hasReceipt.equalsIgnoreCase("y")) {
-            System.out.println("\nAttempting to verify purchase...");
+        // Check for receipt and validate it
+        System.out.println("\nDoes customer have receipt? (y/n)");
+        String hasReceiptInput = scan.nextLine();
+
+        if (hasReceiptInput.equalsIgnoreCase("y")) {
+            System.out.print("Enter receipt ID (format: R<timestamp>): ");
+            String receiptId = scan.nextLine().trim();
+
+            // Load the receipt from file
+            receipt = Receipt.loadByReceiptId(receiptId, productRepo);
+
+            if (receipt == null) {
+                System.out.println("ERROR: Could not load receipt from file!");
+                System.out.println("Return denied.");
+                return;
+            }
+
+            // Verify receipt matches the product
+            if (!receipt.matchesProduct(product)) {
+                System.out.println("ERROR: Receipt does not match this product!"
+                        + "Receipt is for: " + receipt.getProduct().getName()
+                        + "Customer is returning: " + product.getName()
+                        + "Return denied - product mismatch.");
+                return;
+            }
+
+            // Check if within return window (7 days)
+            if (!receipt.isWithinReturnWindow()) {
+                System.out.println("ERROR: Return window expired!"
+                        + "Purchase date: " + receipt.getSaleDate()
+                        + "Return window: 7 days from purchase"
+                        + "Return denied - outside return window.");
+                return;
+            }
+
+            System.out.println("  Receipt validated successfully!"
+                    + "  Purchase Date: " + receipt.getSaleDate()
+                    + "  Original Amount: $" + receipt.getAmount());
+
+        } else {
+            // No receipt - attempt alternative verification
+            System.out.println("\nAttempting to verify purchase without receipt...");
             System.out.println("Enter customer email or phone number:");
             String customerInfo = scan.nextLine();
-            System.out.println("Purchase found in system!");
-        }
 
-        // Step 2: Check return window
-        System.out.println("\nIs purchase within 7 days? (y/n)");
-        String withinWindow = scan.nextLine();
-
-        if (!withinWindow.equalsIgnoreCase("y")) {
-            System.out.println("Return window expired. Return denied.");
+            System.out.println("Searching for purchases by: " + customerInfo
+                    + "Return denied - no proof of purchase.");
             return;
         }
 
-        // Step 3: Inspect for damage
+        // Inspect for damage
         System.out.println("\nInspecting product condition...");
         System.out.println("Is product damaged? (y/n)");
         String isDamaged = scan.nextLine();
@@ -110,24 +144,25 @@ public class SaleService {
             return;
         }
 
-        // Step 4: Process refund
-        System.out.println("\nProcessing refund...");
-        System.out.println("Original payment method (Cash/Card):");
-        String paymentMethod = scan.nextLine();
+        // Refund processing
+        double refundAmount = product.getPrice();
+        System.out.println("\nProcess refund? (y/n)");
+        String refundConfirm = scan.nextLine();
+        if (!refundConfirm.equalsIgnoreCase("y")) {
+            System.out.println("Refund cancelled by operator.");
+            return;
+        }
 
-        System.out.println("Refunding $" + product.getPrice() + " via " + paymentMethod);
-        finance.processReturn(product, 1); // TODO: quantity needs to come from receipt
+        finance.processReturn(product, 1);
+        System.out.println("Refunded $" + refundAmount + " to method: " + receipt.getPaymentMethod());
 
-        // Step 5: Create a batch for the returned item to be re-inspected by QC
+        // QC batch registration
         int batchId = FileManager.getNextId("data/batches.csv");
         List<Item> returnedItems = Collections.singletonList(new Item(1, product));
         ManufacturingBatch returnBatch = new ManufacturingBatch(batchId, product, returnedItems);
-
-        // Save the batch to batches.csv for QC inspection
         returnBatch.saveToBatchFile();
 
-        System.out.println("\nReturned item added to QC batch #" + batchId + " for inspection.");
+        System.out.println("Added to QC batch #" + batchId + " for inspection.");
         System.out.println("=== RETURN COMPLETED ===");
     }
-
 }

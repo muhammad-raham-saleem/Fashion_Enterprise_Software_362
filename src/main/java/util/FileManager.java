@@ -2,6 +2,7 @@ package util;
 
 import model.Material;
 import model.Sketch;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,11 @@ public class FileManager {
             boolean readingSketches = false, readingMaterials = false;
             while ((line = reader.readLine()) != null) {
                 if (line.equals("[SKETCHES]")) {
-                    readingSketches = true; readingMaterials = false;
+                    readingSketches = true;
+                    readingMaterials = false;
                 } else if (line.equals("[MATERIALS]")) {
-                    readingSketches = false; readingMaterials = true;
+                    readingSketches = false;
+                    readingMaterials = true;
                 } else if (!line.isBlank()) {
                     if (readingSketches) {
                         Sketch s = Sketch.deserialize(line);
@@ -48,6 +51,7 @@ public class FileManager {
             System.out.println("Error loading data: " + e.getMessage());
         }
     }
+
     public static List<String> readLines(String filename) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
@@ -61,7 +65,22 @@ public class FileManager {
         return lines;
     }
 
+    /**
+     * Protects errors on writing by creating directories
+     */
+    private static void ensureParentDirectory(String filename) {
+        File f = new File(filename);
+        File parent = f.getParentFile();
+        if (parent != null && !parent.exists()) {
+            boolean created = parent.mkdirs();
+            if (!created && !parent.exists()) {
+                System.out.println("Warning: Could not create directory " + parent.getAbsolutePath());
+            }
+        }
+    }
+
     public static void writeLines(String filename, List<String> lines) {
+        ensureParentDirectory(filename);
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
             for (String line : lines) {
                 writer.println(line);
@@ -83,6 +102,7 @@ public class FileManager {
     }
 
     public static boolean appendLine(String filename, String line) {
+        ensureParentDirectory(filename);
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename, true))) {
             writer.println(line);
             return true;
@@ -94,6 +114,7 @@ public class FileManager {
 
     /**
      * Gets the next available integer ID from a CSV file where the first column contains IDs.
+     *
      * @param filename CSV file to read
      * @return Next available ID
      */

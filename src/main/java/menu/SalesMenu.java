@@ -1,23 +1,24 @@
 package menu;
 
-import java.util.List;
 import java.util.Scanner;
 
 import model.Product;
 import model.ProductRepository;
 import service.ProductService;
+import service.ReturnService;
 import service.SaleService;
-import util.FileManager;
 import util.LogManager;
 
 public class SalesMenu {
     private final Scanner sc;
 
     private final SaleService saleService;
+    private final ReturnService returnService;
 
-    public SalesMenu(Scanner sc, SaleService saleService) {
+    public SalesMenu(Scanner sc, SaleService saleService, ReturnService returnService) {
         this.sc = sc;
         this.saleService = saleService;
+        this.returnService = returnService;
     }
 
     public void start() {
@@ -28,6 +29,7 @@ public class SalesMenu {
             System.out.println("\n--- SALES MENU ---");
             System.out.println("1. Start Sale");
             System.out.println("2. Update Product Price");
+            System.out.println("3. Start return");
             System.out.println("0. Return to Main Menu");
             System.out.print("Choose an option: ");
 
@@ -44,7 +46,7 @@ public class SalesMenu {
                     String productName = sc.nextLine();
                     Product product = productRepo.findByName(productName);
 
-                    if (product == null){
+                    if (product == null) {
                         System.out.println("Product doesn't exist.");
                         break;
                     }
@@ -69,7 +71,18 @@ public class SalesMenu {
                     double newPrice = sc.nextDouble();
                     ProductService.updatePrice(product, newPrice);
                 }
-                case 0 -> System.out.println("Returning to Main Menu..."); 
+                case 3 -> {
+                    System.out.println("Enter product name.");
+                    String productName = sc.nextLine();
+                    Product product = productRepo.findByName(productName);
+
+                    if (product == null) {
+                        System.out.println("Product doesn't exist.");
+                        break;
+                    }
+                    returnService.processReturn(product);
+                }
+                case 0 -> System.out.println("Returning to Main Menu...");
                 default -> System.out.println("Invalid option.");
             }
         } while (choice != 0);

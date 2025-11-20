@@ -9,15 +9,11 @@ import java.util.Scanner;
 
 /**
  * Handles the "Fulfill Online Order" use case:
- * - Select an existing online order
- * - Check / confirm lines
- * - Enter carrier + tracking
- * - Mark order as SHIPPED
+ *  Select an existing online order
+ *  Check / confirm lines
+ *  Enter carrier + tracking
+ *  Mark order as SHIPPED
  *
- * NOTE: Right now this keeps orders in memory.
- * Later you can:
- *   - load/save orders from a file (like products/inventory)
- *   - integrate with Inventory or TransferService to actually reduce stock
  */
 public class OnlineOrderService {
 
@@ -29,10 +25,8 @@ public class OnlineOrderService {
         seedFakeOrders(); // TEMP: demo data so your menu actually does something
     }
 
-    /**
-     * Temporary hard-coded orders just so your demo works.
-     * You can delete this later once you persist real orders.
-     */
+
+    //temp fake orders
     private void seedFakeOrders() {
         OnlineOrder o1 = new OnlineOrder("ORD-1001", "Alice Smith", "123 Main St");
         o1.addLine(new OrderLine("P001", "Classic Jacket", 1));
@@ -41,8 +35,12 @@ public class OnlineOrderService {
         OnlineOrder o2 = new OnlineOrder("ORD-1002", "Bob Lee", "456 Oak Ave");
         o2.addLine(new OrderLine("P005", "Leather Bag", 1));
 
+        OnlineOrder o3 = new OnlineOrder("ORD-1003", "Joe Jane", "712 Lincoln Way");
+        o2.addLine(new OrderLine("P008", "Wool Sock", 1));
+
         orders.add(o1);
         orders.add(o2);
+        orders.add(o3);
     }
 
     public void showOpenOrders() {
@@ -67,7 +65,7 @@ public class OnlineOrderService {
             return;
         }
 
-        // 1. Show orders and pick one
+      //show order and pick one
         showOpenOrders();
         System.out.print("Enter order ID to fulfill: ");
         String id = sc.nextLine().trim();

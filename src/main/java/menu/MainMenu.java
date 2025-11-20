@@ -55,6 +55,7 @@ public class MainMenu implements Menu {
 
         int choice;
         do {
+            System.out.println("\n=== MAIN MENU ===");
             displayOptions();
 
             while (!sc.hasNextInt()) {

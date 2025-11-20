@@ -11,7 +11,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class WarehouseMenu {
+public class WarehouseMenu implements Menu {
     private final Scanner sc;
     private QualityControlService qcService;
     private HashMap<Integer, ManufacturingBatch> batches;
@@ -26,16 +26,45 @@ public class WarehouseMenu {
         this.receivingService = new ReceivingService(sc, batches); 
     }
 
+    @Override
+    public MenuOption[] getOptions() {
+        return new MenuOption[] {
+            new MenuOption(1, "List batches", () -> {
+                for (ManufacturingBatch batch : batches.values()) {
+                    System.out.println(batch);
+                }
+            }),
+            new MenuOption(2, "Review batches quality control", () -> {
+                System.out.print("Enter batch ID to inspect: ");
+                int batchId;
+                try {
+                    batchId = sc.nextInt();
+                    sc.nextLine(); // consume newline
+                } catch (InputMismatchException e) {
+                    System.out.print("Invalid batch ID. Please enter a number. ");
+                    sc.next(); // Clear invalid input
+                    return;
+                }
+                ManufacturingBatch batch = batches.get(batchId);
+                if (batch != null) {
+                    qcService = new QualityControlService(batch);
+                    qcService.performBatchInspection();
+                } else {
+                    System.out.println("Batch ID not found.");
+                }
+            }),
+            new MenuOption(3, "Receive shipment from manufacturer", receivingService::receiveShipmentFromManufacturer),
+            new MenuOption(4, "Fulfill online order", onlineOrderService::fulfillOnlineOrder),
+            new MenuOption(0, "Return to Main Menu", () -> System.out.println("Returning to Main Menu..."))
+        };
+    }
+
+    @Override
     public void start() {
         int choice;
         do {
             System.out.println("\n--- WAREHOUSE MENU ---");
-            System.out.println("1. List batches");
-            System.out.println("2. Review batches quality control");
-            System.out.println("3. Receive shipment from manufacturer");
-            System.out.println("4. Fulfill online order");
-            System.out.println("0. Return to Main Menu");
-            System.out.print("Choose an option: ");
+            displayOptions();
 
             while (!sc.hasNextInt()) {
                 System.out.print("Enter a valid number: ");
@@ -44,36 +73,7 @@ public class WarehouseMenu {
             choice = sc.nextInt();
             sc.nextLine(); // consume newline
 
-            switch (choice) {
-                case 1 -> {
-                    for (ManufacturingBatch batch : batches.values()) {
-                        System.out.println(batch);
-                    }
-                }
-                case 2 -> {
-                    System.out.print("Enter batch ID to inspect: ");
-                    int batchId;
-                    try {
-                        batchId = sc.nextInt();
-                        sc.nextLine(); // consume newline
-                    } catch (InputMismatchException e) {
-                        System.out.print("Invalid batch ID. Please enter a number. ");
-                        sc.next(); // Clear invalid input
-                        break;
-                    }
-                    ManufacturingBatch batch = batches.get(batchId);
-                    if (batch != null) {
-                        qcService = new QualityControlService(batch);
-                        qcService.performBatchInspection();
-                    } else {
-                        System.out.println("Batch ID not found.");
-                    }
-                }
-                case 3 -> receivingService.receiveShipmentFromManufacturer(); 
-                case 4 -> onlineOrderService.fulfillOnlineOrder();
-                case 0 -> System.out.println("Returning to Main Menu...");
-                default -> System.out.println("Invalid option.");
-            }
+            executeOption(choice);
         } while (choice != 0);
     }
 

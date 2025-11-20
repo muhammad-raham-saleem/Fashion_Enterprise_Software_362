@@ -1,6 +1,5 @@
 package util;
 
-import util.FileManager;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,11 +16,11 @@ public class LogManager {
     public void logPriceChange(int productID, double oldPrice, double newPrice){
         try (FileWriter fw = new FileWriter(logFile, true)){
             fw.write("Price Change | Product ID: " + productID +
-                "Old price: " + oldPrice +
+                " Old price: " + oldPrice +
                 
-                "New Price: " + newPrice +
+                " New Price: " + newPrice +
 
-                "Time: " + LocalDateTime.now() + "\n");
+                " Time: " + LocalDateTime.now() + "\n");
         }
         catch (IOException e) {
             System.out.println("Failed to write logs"); 

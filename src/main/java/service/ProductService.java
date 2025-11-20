@@ -2,6 +2,7 @@ package service;
 
 import util.LogManager;
 
+import java.util.List;
 
 import model.Product;
 import model.ProductRepository;
@@ -21,9 +22,10 @@ public class ProductService {
     }
 
     public void updatePrice(Product product, double newPrice){
+        List<Product> products = productRepo.getAll();
         double oldPrice = product.getPrice();
         product.setPrice(newPrice);
-        //TODO Update the product.txt with the new price
+        productRepo.saveAll(products);
         logManager.logPriceChange(product.getId(), oldPrice, newPrice);
     }
     

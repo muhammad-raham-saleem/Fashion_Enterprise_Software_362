@@ -23,10 +23,16 @@ public class ProductService {
 
     public void updatePrice(Product product, double newPrice){
         List<Product> products = productRepo.getAll();
-        double oldPrice = product.getPrice();
-        product.setPrice(newPrice);
-        productRepo.saveAll(products);
-        logManager.logPriceChange(product.getId(), oldPrice, newPrice);
+        for (Product p : products) {
+            if (p.getId() == product.getId()) {
+                double oldPrice = p.getPrice();
+                p.setPrice(newPrice);
+
+                productRepo.saveAll(products);
+                logManager.logPriceChange(p.getId(), oldPrice, newPrice);
+                return;
+            }
+        }
     }
     
 }

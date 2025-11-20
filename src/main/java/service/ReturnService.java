@@ -29,7 +29,7 @@ public class ReturnService {
     public void enumerateReturnReasons() {
         System.out.println("Return Reasons:");
         for (int i = 0; i < ReturnReason.values().length; i++) {
-            System.out.println((i + 1) + ". " + ReturnReason.values()[i]);
+            System.out.println((i + 1) + ". " + ReturnReason.values()[i].toString().replace("_", " "));
         }
     }
 
@@ -46,7 +46,7 @@ public class ReturnService {
                 throw new IllegalArgumentException("Invalid return reason selected.");
             }
             ReturnReason reason = ReturnReason.values()[choice - 1];
-            System.out.println("You selected: " + reason);
+            System.out.println("You selected: " + reason.toString().replace("_", " "));
         } catch (IllegalArgumentException e) {
             System.out.println("Invalid return reason selected.");
         }
@@ -79,31 +79,37 @@ public class ReturnService {
 
             if (receipt == null) {
                 System.out.println("ERROR: Could not load receipt from file!");
-                System.out.println("Return denied.");
+                System.out.println("       Return denied.");
                 return;
             }
 
             // Verify receipt matches the product
             if (!receipt.matchesProduct(product)) {
                 System.out.println("ERROR: Receipt does not match this product!"
-                        + "Receipt is for: " + receipt.getProduct().getName()
-                        + "Customer is returning: " + product.getName()
-                        + "Return denied - product mismatch.");
+                        + "\n       Receipt is for: " + receipt.getProduct().getName()
+                        + "\n       Customer is returning: " + product.getName()
+                        + "\n       Return denied - product mismatch.");
                 return;
             }
 
             // Check if within return window (7 days)
             if (!receipt.isWithinReturnWindow()) {
                 System.out.println("ERROR: Return window expired!"
-                        + "Purchase date: " + receipt.getSaleDate()
-                        + "Return window: 7 days from purchase"
-                        + "Return denied - outside return window.");
+                        + "\n       Purchase date: " + receipt.getSaleDate()
+                        + "\n       Return window: 7 days from purchase"
+                        + "\n       Return denied - outside return window.");
+                return;
+            }
+
+            if (receipt.alreadyReturned()) {
+                System.out.println("ERROR: Receipt has already been used for a return!"
+                        + "\n       Return denied - duplicate return attempt.");
                 return;
             }
 
             System.out.println("  Receipt validated successfully!"
-                    + "  Purchase Date: " + receipt.getSaleDate()
-                    + "  Original Amount: $" + receipt.getAmount());
+                    + "\n  Purchase Date: " + receipt.getSaleDate()
+                    + "\n  Original Amount: $" + receipt.getAmount());
 
         } else {
             // No receipt - attempt alternative verification
@@ -139,6 +145,7 @@ public class ReturnService {
 
         finance.processReturn(product, 1);
         System.out.println("Refunded $" + refundAmount + " to method: " + receipt.getPaymentMethod());
+        receipt.markAsReturned();
 
         // QC batch registration
         int batchId = FileManager.getNextId("data/batches.csv");

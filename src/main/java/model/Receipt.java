@@ -142,6 +142,37 @@ public class Receipt {
         }
         return new Receipt(filepath, productRepo);
     }
+
+    /**
+     * Searches for last line and appends RETURNED
+     */
+    public boolean markAsReturned() {
+        String filepath = RECEIPT_DIR + receiptId + ".txt";
+        List<String> lines = FileManager.readLines(filepath);
+        if (lines.isEmpty()) {
+            return false;
+        }
+        String lastLine = lines.getLast();
+        if (lastLine.contains("RETURNED")) {
+            return false; // Already marked
+        }
+        FileManager.appendLine(filepath, "RETURNED");
+        return true;
+    }
+
+    /**
+     * @return true if receipt already marked as returned
+     */
+    public boolean alreadyReturned() {
+        String filepath = RECEIPT_DIR + receiptId + ".txt";
+        List<String> lines = FileManager.readLines(filepath);
+        for (String line : lines) {
+            if (line.contains("RETURNED")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 

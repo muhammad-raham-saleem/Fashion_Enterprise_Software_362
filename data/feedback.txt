@@ -1,2 +1,10 @@
-1,Goof manufacturability,4,Manufacturing,Mike Rodriguez
-2,Needs better finish,3,Design,Alice Williams
+1,Good manufacturability,4,Manufacturing,Mike Rodriguez
+2,Needs better finish quality,3,Design,Alice Williams
+3,This needs to weigh less,3,Manufacturing,Mike Rodriguez
+4,No comments,5,Manufacturing,Mike Rodriguez
+5,Surface texture can be improved,4,Design,Alice Williams
+6,Assembly process seems efficient,5,Manufacturing,Mike Rodriguez
+7,Weight distribution feels uneven,3,Design,Alice Williams
+8,Material choice appears appropriate,4,Manufacturing,Mike Rodriguez
+9,Edges should be smoothed for user safety,3,Design,Alice Williams
+10,Manufacturing tolerances are acceptable,5,Manufacturing,Mike Rodriguez

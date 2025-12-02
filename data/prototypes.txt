@@ -1,1 +1,10 @@
-1,Test Fabric v1,Approved,80% cotton\, 20% polyester with improved finish,2,1,1;2
+1,winter-sweaters,Approved,100% cotton,1,2,
+2,summer,Testing,cotton,1,10,
+3,fall,Testing,cotton,1,2,
+4,athletic-hoodie,Testing,poly-cotton blend,3,5,
+5,denim-jacket,Approved,denim,4,6,
+6,thermal-wear,Testing,wool blend,2,3,
+7,linen-shirt,Design,linen,5,1,
+8,windbreaker,Testing,nylon,6,4,
+9,casual-tshirt,Approved,organic cotton,3,7,
+10,wool-coat,Testing,wool,4,2,

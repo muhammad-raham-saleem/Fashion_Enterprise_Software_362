@@ -1,1 +1,10 @@
 1,TestVendor Inc,test@vendor.com,true,false,Business License;Tax Certificate
+2,ClothWorks Manufacturing,contact@clothworks.com,false,false,Proposal.txt;Design Specs;Requirements
+3,PureFiber Textiles,sales@purefiber.com,true,true,Business License;Organic Certification;Supplier Agreement
+4,Urban Stitch Co.,info@urbanstitch.co,false,false,Prototype Samples;Quality Report
+5,NorthWool Industries,support@northwool.com,true,false,Wool Source Certificate;Compliance Report
+6,Silk & Thread Limited,hello@silkthread.co,true,true,Business License;Silk Origin Certificate;Trade Documents
+7,NextGen Apparel Partners,partners@nextgenapparel.com,false,false,Initial Proposal;Design Mockups
+8,EcoCotton Suppliers,eco@cottonsupply.org,true,true,Organic Cotton Certification;Sustainability Report
+9,DenimForge,contact@denimforge.com,true,false,Manufacturing License;Safety Compliance Forms
+10,Global Knit Solutions,service@globalknit.com,false,false,Tech Pack;Pricing Sheet

@@ -1,1 +1,15 @@
-1,1,Approved,Net 30 payment,100% organic,25000.00,Approved by finanace,Compiant with regulations
+1,1,Approved,Net 30 payment,100% organic,25000.00,Approved by finance,Compliant with regulations
+2,2,Pending Review,Net 45 payment,Fair Trade Certified,18750.00,Awaiting cost breakdown,Requires updated environmental report
+3,3,Rejected,Net 15 payment,None,9200.00,Financial anomalies detected,Missing supplier compliance form
+4,1,Approved,Net 30 payment,100% organic,33250.00,Budget confirmed,All regulatory documents verified
+5,2,On Hold,Net 60 payment,Non-GMO certified,14500.00,Need updated PO,Pending sustainability audit
+6,1,Approved,Net 30 payment,ISO 22000,58000.00,Approved after revision,Meets global import standards
+7,3,Rejected,Net 30 payment,None,7600.00,Insufficient justification,Failed safety compliance test
+8,1,Approved,Net 15 payment,USDA Organic,42000.00,Finance fast-tracked request,Fully compliant
+9,2,Pending Review,Net 45 payment,Non-GMO verified,16800.00,Need supplier tax documents,Compliance pending
+10,1,Approved,Net 30 payment,100% organic,50500.00,Passed budget threshold,Regulatory cross-check complete
+11,2,Pending Review,Net 30 payment,Fair Labor Certified,21000.00,Awaiting VP signature,Requires international compliance review
+12,3,Rejected,Net 60 payment,None,8800.00,Price inconsistency found,Incorrect material labeling
+13,1,Approved,Net 30 payment,ISO 9001,29950.00,Approved with notes,Compliant with manufacturing standards
+14,2,On Hold,Net 45 payment,Non-GMO certified,15200.00,Missing invoice attachment,Compliance form expired
+15,1,Approved,Net 30 payment,100% organic,27400.00,Finance validated cost structure,Regulatory compliance confirmed

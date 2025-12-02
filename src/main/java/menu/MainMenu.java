@@ -27,23 +27,30 @@ public class MainMenu implements Menu {
     private final Events events = new Events();
     private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
     private final CampaignService campaignService = new CampaignService(sc);
-    private final VendorContractRepository vendorContractRepository = new VendorContractRepository("data/vendors.txt", "data/contracts.txt");
-    private final MaterialPrototypeRepository materialPrototypeRepository = new MaterialPrototypeRepository("data/specifications.txt", "data/prototypes.txt", "data/feedback.txt");
+    private final VendorContractRepository vendorContractRepository = new VendorContractRepository("data/vendors.txt",
+            "data/contracts.txt");
+    private final MaterialPrototypeRepository materialPrototypeRepository = new MaterialPrototypeRepository(
+            "data/specifications.txt", "data/prototypes.txt", "data/feedback.txt");
     private final VendorContractService vendorContractService = new VendorContractService(sc, vendorContractRepository);
-    private final MaterialPrototypeService materialPrototypeService = new MaterialPrototypeService(sc, materialPrototypeRepository);
+    private final MaterialPrototypeService materialPrototypeService = new MaterialPrototypeService(sc,
+            materialPrototypeRepository);
 
     @Override
     public MenuOption[] getOptions() {
-        return new MenuOption[]{
-                new MenuOption(1, "Design Department", () -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService, designRepo).start()),
+        return new MenuOption[] {
+                new MenuOption(1, "Design Department",
+                        () -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService,
+                                designRepo).start()),
                 new MenuOption(2, "Warehouse Department", () -> new WarehouseMenu(sc).start()),
                 new MenuOption(3, "Sales Department", () -> new SalesMenu(sc, saleService, returnService).start()),
                 new MenuOption(4, "HR Department", () -> new HRMenu(sc, hr, hrService).start()),
                 new MenuOption(5, "Shipping Department", shipMenu::start),
-                new MenuOption(6, "Marketing Menu", () -> new MarketingMenu(sc, fashionShowService, campaignService).start()),
+                new MenuOption(6, "Marketing Menu",
+                        () -> new MarketingMenu(sc, fashionShowService, campaignService).start()),
                 new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService).start()),
                 new MenuOption(8, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
-                new MenuOption(9, "Vendor Contract", () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),
+                new MenuOption(9, "Material Prototype Menu",
+                        () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),
                 new MenuOption(0, "Exit", () -> System.out.println("Exiting system..."))
         };
     }

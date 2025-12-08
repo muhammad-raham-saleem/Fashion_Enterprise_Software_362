@@ -30,6 +30,10 @@ public class Inventory {
         return stock.getOrDefault(productId,0) > 0;
     }
 
+    public int getStock(int productId){
+        return stock.getOrDefault(productId, 0);
+    }
+
     public void reduceStock(int productId){
         stock.put(productId, stock.get(productId) - 1); // Reduces product by 1
         saveStock();

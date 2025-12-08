@@ -1,11 +1,11 @@
-id,name,price
-1,Designer Shirt,49.99
-2,Fashion Pants,99.99
-3,Leather Bag,149.99
-4,Silk Scarf,29.99
-5,Denim Jacket,99.99
-6,Winter Coat,129.99
-7,Dress,59.99
-8,Luxury Watch,239.99
-9,Wool Sweater,52.99
-10,Formal Tie,29.99
+id,name,price,lowStockThreshold,approvedVendorIDs
+1,Designer Shirt,49.99,10,1|5
+2,Fashion Pants,99.99,10,1|9
+3,Leather Bag,149.99,10,1
+4,Silk Scarf,29.99,15,1|5|9
+5,Denim Jacket,99.99,10,9
+6,Winter Coat,129.99,12,1|5
+7,Dress,59.99,10,1
+8,Luxury Watch,239.99,10,1
+9,Wool Sweater,52.99,10,5
+10,Formal Tie,29.99,15,1|5

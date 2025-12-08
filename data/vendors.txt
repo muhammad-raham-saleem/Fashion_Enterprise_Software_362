@@ -8,3 +8,4 @@
 8,EcoCotton Suppliers,eco@cottonsupply.org,true,true,Organic Cotton Certification;Sustainability Report
 9,DenimForge,contact@denimforge.com,true,false,Manufacturing License;Safety Compliance Forms
 10,Global Knit Solutions,service@globalknit.com,false,false,Tech Pack;Pricing Sheet
+11,cleanFiber,clean@gmail.com,false,false,test

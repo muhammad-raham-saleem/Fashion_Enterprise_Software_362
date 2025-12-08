@@ -58,14 +58,28 @@ public record ProductRepository(String filePath) implements Repository<Product> 
         int id = Integer.parseInt(parts[0]);
         String name = parts[1];
         double price = Double.parseDouble(parts[2]);
-        return new Product(id, name, price);
+
+        // Backwards compatibility: handle old format (3 fields) and new format (5 fields)
+        if (parts.length >= 5) {
+            // New format: id,name,price,lowStockThreshold,approvedVendorIDs
+            int lowStockThreshold = Integer.parseInt(parts[3]);
+            List<String> approvedVendorIDs = Product.parseVendorIDs(parts[4]);
+            return new Product(id, name, price, lowStockThreshold, approvedVendorIDs);
+        } else {
+            // Old format: id,name,price (uses defaults: threshold=10, empty vendor list)
+            return new Product(id, name, price);
+        }
     }
 
     public void saveAll(List<Product> products) {
         List<String> lines = new ArrayList<>();
-        lines.add("id,name,price");
+        lines.add("id,name,price,lowStockThreshold,approvedVendorIDs");
         for (Product p : products) {
-            lines.add(p.getId() + "," + p.getName() + "," + p.getPrice());
+            lines.add(p.getId() + "," +
+                     p.getName() + "," +
+                     p.getPrice() + "," +
+                     p.getLowStockThreshold() + "," +
+                     p.getApprovedVendorIDsAsString());
         }
         FileManager.writeLines(filePath, lines);
     }

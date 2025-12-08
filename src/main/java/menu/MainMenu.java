@@ -34,6 +34,10 @@ public class MainMenu implements Menu {
     private final VendorContractService vendorContractService = new VendorContractService(sc, vendorContractRepository);
     private final MaterialPrototypeService materialPrototypeService = new MaterialPrototypeService(sc,
             materialPrototypeRepository);
+    private final ProductRepository productRepository = new ProductRepository("data/products.txt");
+    private final PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository("data/purchase_orders.csv");
+    private final PurchaseOrderService purchaseOrderService = new PurchaseOrderService(purchaseOrderRepository,
+            productRepository, vendorContractRepository, inventory);
 
     @Override
     public MenuOption[] getOptions() {
@@ -51,6 +55,8 @@ public class MainMenu implements Menu {
                 new MenuOption(8, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
                 new MenuOption(9, "Material Prototype Menu",
                         () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),
+                new MenuOption(10, "Purchase Order Management",
+                        () -> new PurchaseOrderMenu(sc, purchaseOrderService).start()),
                 new MenuOption(0, "Exit", () -> System.out.println("Exiting system..."))
         };
     }

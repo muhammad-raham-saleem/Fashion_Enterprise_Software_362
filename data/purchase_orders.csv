@@ -1,0 +1,3 @@
+purchaseOrderId,productId,productName,vendorId,vendorName,contractId,quantity,unitCost,totalCost,expectedDeliveryDate,status,createdDate,receivedDate
+1,1,Designer Shirt,1,TestVendor Inc,1,18,30.00,540.00,2025-12-15,Received,2025-12-08,2025-12-08
+2,2,Fashion Pants,1,TestVendor Inc,1,18,12.99,233.82,2025-12-15,Completed,2025-12-08,2025-12-08

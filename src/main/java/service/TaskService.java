@@ -2,7 +2,9 @@ package service;
 
 import java.time.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import model.*;
@@ -14,7 +16,8 @@ public class TaskService {
     private Scanner sc;
     private String filename;
 
-    private List<Task> allTasks = new ArrayList<>();
+    //Hash map that maps each task's unique ID to their object.
+    private Map<Integer, Task> allTasks = new HashMap<>();
 
     public TaskService (HR hr, Scanner sc, String f) {
 
@@ -23,6 +26,10 @@ public class TaskService {
         this.filename = f;
         loadTasks();
 
+    }
+
+    public Task getTaskById (int id) {
+        return allTasks.get(id);
     }
 
     //View all tasks
@@ -136,7 +143,7 @@ public class TaskService {
 
         Task newTask = new Task(creator, name, desc, deadline);
 
-        allTasks.add(newTask);
+        allTasks.put(newTask.getID(), newTask);
         creator.addTask(newTask);
         saveTasks();
 
@@ -408,7 +415,7 @@ public class TaskService {
 
         List<String> lines = new ArrayList<>();
 
-        for (Task task : allTasks){
+        for (Task task : allTasks.values()){
 
             lines.add("BEGIN TASK");
             lines.add("CREATOR_ID ~ " + task.getCreator().getID());
@@ -504,10 +511,10 @@ public class TaskService {
 
                     //Create the task and add it
                     currentTask = new Task(creator, assignee, name, desc, deadline, assigned, completed, accepted, comments, submitDateTime);
-                    allTasks.add(currentTask);
+                    allTasks.put(currentTask.getID(), currentTask);
                     creator.addTask(currentTask);
-                    //If task is assigned but not completed, add to assignee's task list
-                    if (assigned && !completed) assignee.addTask(currentTask);
+                    //If task is assigned, add to assignee's task list
+                    if (assigned) assignee.addTask(currentTask);
                 }
 
             }

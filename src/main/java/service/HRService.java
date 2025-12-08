@@ -97,4 +97,85 @@ public class HRService {
         } 
     }
 
+    public void sendReview (EmployeeReview r) {
+        hr.addReview(r);
+    }
+
+    public void approveReview () {
+
+        List<EmployeeReview> reviews = hr.getReviews();
+        
+        int choice = 0;
+        do {
+
+            System.out.println("\n--- REVIEWS ---");
+            if (reviews.isEmpty()) System.out.println("There are no reviews.");
+
+            for (int i=1; i<=reviews.size(); i++) {
+
+                EmployeeReview current = reviews.get(i-1);
+                System.out.print(i + ". Review for " + current.getReviewee().getName());
+                System.out.print(", " + current.getDateTime());
+                System.out.println(" (AWAITING APPROVAL)");
+
+            }
+
+            //Next steps
+            System.out.println("\nEnter Review Number to approve/disapprove.");
+            System.out.println("Or Type 0 to Go Back.");
+
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+
+            if (choice == 0) System.out.println("Returning...");
+            else if (choice < reviews.size()+1) {
+                EmployeeReview review = reviews.get(choice-1);
+                answerReview(review);
+            }
+            else System.out.println("Invalid option.");
+
+        } while (choice < reviews.size()+1);
+
+    }
+
+    private void answerReview (EmployeeReview review) {
+
+        int choice;
+        //Begin selection of task to accept
+        do {
+            System.out.println("1: Approve Review");
+            System.out.println("2: Disapprove Review");
+            System.out.println("0: Cancel");
+            System.out.print("Choose an option: ");
+
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> {
+                    review.approve();
+                    hr.getReviews().remove(review);
+                    review.getReviewee().addReview(review);
+                    //Success message
+                    System.out.println("Successfully approved review.");
+                }
+                case 2 -> {
+                    hr.getReviews().remove(review);
+                    //Success message
+                    System.out.println("Successfully disapproved review.");
+                }
+                case 0 -> System.out.println("Returning...");
+                default -> System.out.println("Invalid option.");
+            }
+
+        } while (choice < 0);
+
+    }
+
 }

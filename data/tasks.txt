@@ -5,7 +5,9 @@ NAME ~ Create a new design sketch
 DESCRIPTION ~ We need new designs for our upcoming collection.
 DEADLINE ~ 2025-11-25T16:10
 ACCEPTED ~ true
-COMPLETED ~ false
+COMPLETED ~ true
+COMMENTS ~ poopy
+SUBMIT_DATETIME ~ 2025-12-08T03:12:53.099996700
 END TASK
 
 BEGIN TASK

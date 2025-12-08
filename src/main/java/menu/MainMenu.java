@@ -22,6 +22,7 @@ public class MainMenu implements Menu {
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
     private final TaskService taskService = new TaskService(hr, sc, "data/tasks.txt");
+    private final ReviewService reviewService = new ReviewService(sc, "data/reviews.txt", hr, hrService, taskService);
     private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
     private final Schedule schedule = new Schedule();
     private final Events events = new Events();
@@ -47,7 +48,7 @@ public class MainMenu implements Menu {
                 new MenuOption(5, "Shipping Department", shipMenu::start),
                 new MenuOption(6, "Marketing Menu",
                         () -> new MarketingMenu(sc, fashionShowService, campaignService).start()),
-                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService).start()),
+                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService, reviewService).start()),
                 new MenuOption(8, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
                 new MenuOption(9, "Material Prototype Menu",
                         () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),

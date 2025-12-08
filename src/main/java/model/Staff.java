@@ -16,6 +16,8 @@ public class Staff {
     private List<Task> tasks = new ArrayList<>(); //Current assigned tasks
     private boolean available; //Is the staff member available to be assigned tasks?
 
+    private List<EmployeeReview> reviews = new ArrayList<>();
+
     public Staff (String n, String d, String r, int s) {
 
         name = n;
@@ -66,6 +68,10 @@ public class Staff {
         available = true;
     }
 
+    public void addReview (EmployeeReview r) {
+        reviews.add(r);
+    }
+
     //Return list of unassigned tasks
     public List<Task> getUnassignedTasks() {
 
@@ -96,6 +102,17 @@ public class Staff {
             if (t.isAccepted() && !t.isCompleted()) progress.add(t);
         }
         return progress;
+
+    }
+
+    //Return list of completed tasks
+    public List<Task> getCompletedTasks() {
+
+        List<Task> complete = new ArrayList<>();
+        for (Task t : tasks) {
+            if (t.isCompleted()) complete.add(t);
+        }
+        return complete;
 
     }
 

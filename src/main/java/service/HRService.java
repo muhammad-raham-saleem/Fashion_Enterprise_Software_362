@@ -137,7 +137,7 @@ public class HRService {
             }
             else System.out.println("Invalid option.");
 
-        } while (choice < reviews.size()+1);
+        } while (choice > 0 && choice < reviews.size()+1);
 
     }
 

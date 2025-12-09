@@ -3,6 +3,7 @@ package menu;
 import java.util.Scanner;
 
 import model.*;
+import service.HRService;
 import service.ReviewService;
 import service.TaskService;
 
@@ -10,19 +11,23 @@ public class StaffMenu {
 
     private final Scanner sc;
     private final HR hr;
+    private final HRService hrService;
     private final TaskService taskService;
     private final ReviewService reviewService;
 
     private Staff user; //Staff member using the menu
 
-    public StaffMenu (Scanner sc, HR hr, TaskService ts, ReviewService rs) {
+    public StaffMenu (Scanner sc, HR hr, HRService hrs, TaskService ts, ReviewService rs) {
         this.sc = sc;
         this.hr = hr;
+        hrService = hrs;
         taskService = ts;
         reviewService = rs;
     }
 
     public void start() {
+
+        hrService.viewStaffList();
 
         //Enter employee ID to identify who is doing the action
         System.out.print("Enter your employee ID: ");

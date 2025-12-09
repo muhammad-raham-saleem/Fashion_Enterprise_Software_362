@@ -35,6 +35,7 @@ public class EmployeeReview {
 
     private Map<Task, List<Rating>> tasks;
     private String comments;
+    private double raiseRec;
 
     private boolean approved;
 
@@ -48,10 +49,11 @@ public class EmployeeReview {
     }
 
     //Load from file constructor
-    public EmployeeReview (Manager m, Staff s, LocalDateTime dt, boolean appr) {
+    public EmployeeReview (Manager m, Staff s, LocalDateTime dt, double r, boolean appr) {
         reviewer = m;
         reviewee = s;
         dateTime = dt;
+        raiseRec = r;
         tasks = new HashMap<>();
         approved = appr;
     }
@@ -65,6 +67,9 @@ public class EmployeeReview {
     }
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+    public double getRaise() {
+        return raiseRec;
     }
     public boolean isApproved() {
         return approved;
@@ -96,8 +101,13 @@ public class EmployeeReview {
         comments = comms;
     }
 
+    public void setRaise (double r) {
+        raiseRec = r;
+    }
+
     public void approve() {
         approved = true;
+        reviewee.applyRaise(raiseRec);
     }
 
 }

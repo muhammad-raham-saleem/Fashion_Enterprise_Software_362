@@ -20,9 +20,12 @@ public class ReviewService {
     private List<EmployeeReview> reviews = new ArrayList<>();
 
     private String[] categories = {
-            "quality",
-            "timeliness"
-        };
+        "Quality",
+        "Timeliness",
+        "Reliability",
+        "Collaboration",
+        "Problem Solving"
+    };
 
     public ReviewService (Scanner sc, String f, HR hr, HRService hrs, TaskService ts) {
 
@@ -31,6 +34,7 @@ public class ReviewService {
         taskService = ts;
         this.sc = sc;
         this.filename = f;
+        hrService.addReviewService(this);
         loadReviews();
 
     }
@@ -101,8 +105,8 @@ public class ReviewService {
             
             for (Rating rating : review.getRatings(task)) {
 
-                // TODO: List rating stuff
-                System.out.println(rating);
+                System.out.println(rating.getCategory() + ": " + rating.getScore() + "/10");
+                System.out.println("Comments: " + rating.getComments());
 
             }
 
@@ -194,10 +198,14 @@ public class ReviewService {
             
         } while (choice != 0);
 
-        System.err.println("Enter overall comments:");
+        System.out.println("Enter overall comments:");
         Scanner sc2 = new Scanner(System.in);
         String comms = sc2.nextLine();
         review.addComments(comms);
+
+        System.out.print("Suggest Raise % (0 for none): ");
+        double raise = sc.nextDouble();
+        review.setRaise(raise);
 
         reviews.add(review);
         reviewer.addReview(review);
@@ -240,8 +248,12 @@ public class ReviewService {
 
     }
 
+    public void deleteReview (EmployeeReview r) {
+        reviews.remove(r);
+    }
+
     //Save reviews to file
-    private void saveReviews() {
+    public void saveReviews() {
 
         List<String> lines = new ArrayList<>();
 
@@ -252,6 +264,7 @@ public class ReviewService {
             lines.add("REVIEWEE_ID ~ " + review.getReviewee().getID());
 
             lines.add("COMMENTS ~ " + review.getComments());
+            lines.add("RAISE ~ " + review.getRaise());
             lines.add("DATETIME ~ " + review.getDateTime());
             lines.add("APPROVED ~ " + review.isApproved());
 
@@ -287,12 +300,14 @@ public class ReviewService {
 
         List<String> lines = util.FileManager.readLines(filename);
         EmployeeReview current = null;
+        Task currTask = null;
 
         //Initialize variables for each task
         Manager reviewer = null;
         Staff reviewee = null;
         LocalDateTime dateTime = null;
         String comments = null;
+        double raise = 0;
         boolean approved = false;
 
         //Initialize rating varaibles
@@ -322,6 +337,7 @@ public class ReviewService {
 
                 }
                 case "COMMENTS" -> comments = line.split("~ ")[1];
+                case "RAISE" -> raise = Double.parseDouble(line.split("~ ")[1]);
                 case "DATETIME" -> {
                     //Parse date string
                     String[] dline = line.split("~ ")[1].split("T");
@@ -332,18 +348,20 @@ public class ReviewService {
                 }
                 case "APPROVED" -> approved = Boolean.parseBoolean(line.split("~ ")[1]);
                 case "BEGIN TASKS" -> 
-                    current = new EmployeeReview(reviewer, reviewee, dateTime, approved);
-                case "TASK_ID" -> task_id = Integer.parseInt(line.split("~ ")[1]);
-                case "CATEGORY" -> category = line.split("~ ")[1];
+                    current = new EmployeeReview(reviewer, reviewee, dateTime, raise, approved);
+                case "TASK_ID" -> {
+                    task_id = Integer.parseInt(line.split("~ ")[1]);
+                    currTask = taskService.getTaskById(task_id);
+                    current.addTask(currTask);
+                }
+                case "CATEGORY" -> {
+                    if (category != null) {
+                        current.rateTask(currTask, category, score, rateComms);
+                    }
+                    category = line.split("~ ")[1];
+                }
                 case "SCORE" -> score = Double.parseDouble(line.split("~ ")[1]);
                 case "COMMS" -> rateComms = line.split("~ ")[1];
-                case "TASK END" -> {
-
-                    Task newTask = taskService.getTaskById(task_id);
-                    current.addTask(newTask);
-                    current.rateTask(newTask, category, score, rateComms);
-
-                }
                 case "END REVIEW" -> {
 
                     reviews.add(current);

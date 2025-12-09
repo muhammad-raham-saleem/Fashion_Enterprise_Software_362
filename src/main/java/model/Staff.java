@@ -55,6 +55,9 @@ public class Staff {
     public void setManager (Manager m) {
         manager = m;
     }
+    public Manager getManager() {
+        return manager;
+    }
 
     public List<Task> getTasks() {
         return tasks;
@@ -70,6 +73,12 @@ public class Staff {
 
     public void addReview (EmployeeReview r) {
         reviews.add(r);
+    }
+
+    public void applyRaise (double r) {
+        r *= 0.1;
+        r += 1;
+        salary *= r;
     }
 
     //Return list of unassigned tasks

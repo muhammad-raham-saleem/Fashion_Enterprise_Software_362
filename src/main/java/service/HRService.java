@@ -9,7 +9,9 @@ public class HRService {
     private HR hr;
     private Scanner sc;
     private String filename;
-
+    
+    private ReviewService reviewService;
+    
     public HRService (HR hr, Scanner sc, String f) {
         this.hr = hr;
         this.sc = sc;
@@ -17,15 +19,17 @@ public class HRService {
         loadStaff();
     }
 
+    public void addReviewService (ReviewService rs) {
+        reviewService = rs;
+    }
+
     public void viewStaffList() {
 
         if (this.hr.getStaff().isEmpty()) System.out.println("No staff hired.");
         else {
             for (Staff s : this.hr.getStaff()) {
-                System.out.println("Name: " + s.getName());
-                System.out.println("Department: " + s.getDepartment());
-                System.out.println("Role: " + s.getRole());
-                System.out.println("Salary: " + s.getSalary());
+                System.out.println(s.getID() + ": " + s.getName() + " (" + s.getDepartment() + ")");
+                System.out.println("Role: " + s.getRole() + ", Salary: $" + s.getSalary() + "\n");
             }
         }
         
@@ -64,10 +68,13 @@ public class HRService {
 
     private void saveStaff() {
         List<String> lines = new ArrayList<>();
-        lines.add("name, department, role, salary");
+        lines.add("name, id, department, role, salary, isManager, manager");
 
         for (Staff s : this.hr.getStaff()){
-            lines.add(s.getName() + ", " + s.getDepartment() + ", " + s.getRole() + ", " + s.getSalary());
+            String line = s.getName() + ", " + s.getID() + ", " + s.getDepartment() + ", " + s.getRole() + ", " + s.getSalary();
+            if (s instanceof Manager) line += ", true";
+            else line += ", false, " + s.getManager().getID();
+            lines.add(line);
         }
         FileManager.writeLines(filename, lines);
     }
@@ -162,11 +169,13 @@ public class HRService {
                     review.approve();
                     hr.getReviews().remove(review);
                     review.getReviewee().addReview(review);
+                    saveStaff();
                     //Success message
                     System.out.println("Successfully approved review.");
                 }
                 case 2 -> {
                     hr.getReviews().remove(review);
+                    reviewService.deleteReview(review);
                     //Success message
                     System.out.println("Successfully disapproved review.");
                 }
@@ -175,6 +184,8 @@ public class HRService {
             }
 
         } while (choice < 0);
+
+        reviewService.saveReviews();
 
     }
 

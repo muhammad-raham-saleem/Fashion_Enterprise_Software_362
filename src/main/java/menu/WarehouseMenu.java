@@ -4,6 +4,7 @@ import model.*;
 import service.OnlineOrderService;
 import service.QualityControlService;
 import service.ReceivingService;
+import service.PickListService; // ADD
 import util.FileManager;
 
 import java.util.HashMap;
@@ -17,13 +18,15 @@ public class WarehouseMenu implements Menu {
     private HashMap<Integer, ManufacturingBatch> batches;
 
     private final OnlineOrderService onlineOrderService;
-    private final ReceivingService receivingService; 
+    private final ReceivingService receivingService;
+    private final PickListService pickListService; // ADD
 
     public WarehouseMenu(Scanner sc) {
         this.sc = sc;
         this.batches = loadAllBatches();
         this.onlineOrderService = new OnlineOrderService(sc);
-        this.receivingService = new ReceivingService(sc, batches); 
+        this.receivingService = new ReceivingService(sc, batches);
+        this.pickListService = new PickListService(onlineOrderService); // ADD
     }
 
     @Override
@@ -55,6 +58,15 @@ public class WarehouseMenu implements Menu {
             }),
             new MenuOption(3, "Receive shipment from manufacturer", receivingService::receiveShipmentFromManufacturer),
             new MenuOption(4, "Fulfill online order", onlineOrderService::fulfillOnlineOrder),
+            new MenuOption(5, "Generate pick list for an online order", () -> { // ADD
+                System.out.print("Enter order ID to generate pick list: ");
+                String orderId = sc.nextLine().trim();
+                if (orderId.isEmpty()) {
+                    System.out.println("Order ID cannot be empty.");
+                    return;
+                }
+                pickListService.generatePickListForOrder(orderId);
+            }),
             new MenuOption(0, "Return to Main Menu", () -> System.out.println("Returning to Main Menu..."))
         };
     }

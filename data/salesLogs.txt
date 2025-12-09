@@ -2,3 +2,14 @@
 2025-12-08, Designer Shirt, 49.99
 2025-12-08, Designer Shirt, 49.99
 2025-12-09, Designer Shirt, 49.99
+2025-12-09, Silk Scarf, 29.99
+2025-12-09, Winter Coat, 129.99
+2025-12-09, Formal Tie, 29.99
+2025-12-09, Designer Shirt, 49.99
+2025-12-09, Dress, 59.99
+2025-12-10, Winter Coat, 129.99
+2025-12-10, Designer Shirt, 49.99
+2025-12-10, Designer Shirt, 49.99
+2025-12-10, Dress, 59.99
+2025-12-10, Fashion Pants, 99.99
+

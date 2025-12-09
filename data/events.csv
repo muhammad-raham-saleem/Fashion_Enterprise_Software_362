@@ -1,2 +1,6 @@
 id,name,venue,date,cost,capacity,status,rsvpCount,staffIds,rejectionNotes
-1,NYE_CELEBRATION,Waukee,2025-12-31,25.0,300,APPROVED,0,,
+1,NYE_CELEBRATION,Waukee,2025-12-31,25.0,300,CANCELLED,0,,No one wants to go!
+2,Spring_Fashion_Show,Des_Moines_Civic_Center,2025-04-15,75.0,500,APPROVED,245,3;5;7,
+3,Summer_Outdoor_Gala,Prairie_Meadows,2025-07-20,150.0,800,DRAFT,650,2;4;6;8,
+4,Fall_Wedding_Expo,Iowa_State_Fairgrounds,2025-10-05,45.0,400,PENDING_APPROVAL,0,,
+5,Winter_Brunch,Hyatt_Regency,2025-02-14,35.0,150,DRAFT,0,,

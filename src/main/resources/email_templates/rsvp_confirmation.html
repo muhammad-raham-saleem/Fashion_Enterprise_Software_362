@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+            <td style="background-color: {{STATUS_COLOR}}; color: #ffffff; padding: 30px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px;">RSVP {{STATUS}}</h1>
+            </td>
+        </tr>
+
+        <!-- Content -->
+        <tr>
+            <td style="padding: 30px;">
+                <p>Dear {{CUSTOMER_NAME}},</p>
+                <p>Thank you for your response to <strong>{{EVENT_NAME}}</strong>.</p>
+                <p>{{MESSAGE}}</p>
+                <p><strong>Event Details:</strong></p>
+                <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                    <tr>
+                        <td>Venue: {{EVENT_VENUE}}</td>
+                    </tr>
+                    <tr>
+                        <td>Date: {{EVENT_DATE}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 14px; color: #666666;">
+                <p style="margin: 5px 0;">Fashion Enterprise | Event Coordination Department</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <!-- Header -->
+        <tr>
+            <td style="background-color: #667eea; color: #ffffff; padding: 30px; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px;">You're Invited!</h1>
+                {{VIP_BADGE}}
+            </td>
+        </tr>
+
+        <!-- Content -->
+        <tr>
+            <td style="padding: 30px;">
+                <p>Dear {{CUSTOMER_NAME}},</p>
+                <p>We are delighted to invite you to our exclusive event:</p>
+
+                <table width="100%" cellpadding="10" cellspacing="0" border="0" style="background-color: #f8f9fa; margin: 20px 0;">
+                    <tr>
+                        <td><strong>Event:</strong> {{EVENT_NAME}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Venue:</strong> {{EVENT_VENUE}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Date:</strong> {{EVENT_DATE}}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ticket Price:</strong> ${{EVENT_COST}}</td>
+                    </tr>
+                </table>
+
+                <p>This promises to be an unforgettable experience showcasing the latest in fashion innovation.</p>
+
+                <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                    <tr>
+                        <td align="center" style="padding: 20px 0;">
+                            <a href="#" style="display: inline-block; background-color: #28a745; color: #ffffff; padding: 12px 30px; text-decoration: none; margin: 0 5px; font-weight: bold;">ACCEPT</a>
+                            <a href="#" style="display: inline-block; background-color: #dc3545; color: #ffffff; padding: 12px 30px; text-decoration: none; margin: 0 5px; font-weight: bold;">DECLINE</a>
+                        </td>
+                    </tr>
+                </table>
+
+                <p style="font-size: 14px; color: #666666;">
+                    Please respond by clicking one of the buttons above. Capacity is limited!
+                </p>
+            </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #f8f9fa; padding: 20px; text-align: center; font-size: 14px; color: #666666;">
+                <p style="margin: 5px 0;">Fashion Enterprise | Event Coordination Department</p>
+                <p style="margin: 5px 0;">Email: {{CUSTOMER_EMAIL}}</p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

@@ -24,15 +24,14 @@ public class MainMenu implements Menu {
     private final TaskService taskService = new TaskService(hr, sc, "data/tasks.txt");
     private final ReviewService reviewService = new ReviewService(sc, "data/reviews.txt", hr, hrService, taskService);
     private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
-    private final Schedule schedule = new Schedule();
-    private final Events events = new Events();
-    private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
     private final CampaignService campaignService = new CampaignService(sc);
-    private final VendorContractRepository vendorContractRepository = new VendorContractRepository("data/vendors.txt",
-            "data/contracts.txt");
-    private final MaterialPrototypeRepository materialPrototypeRepository = new MaterialPrototypeRepository(
-            "data/specifications.txt", "data/prototypes.txt", "data/feedback.txt");
+    private final model.EventRepository eventRepository = new model.EventRepository("data/events.csv");
+    private final model.CustomerRepository customerRepository = new model.CustomerRepository("data/customers.csv");
+    private final service.EventCoordinatorService eventCoordinatorService = new service.EventCoordinatorService(
+            eventRepository, customerRepository, hr, financeService, new util.BrowserEmailHandler());
+    private final VendorContractRepository vendorContractRepository = new VendorContractRepository("data/vendors.txt", "data/contracts.txt");
     private final VendorContractService vendorContractService = new VendorContractService(sc, vendorContractRepository);
+    private final MaterialPrototypeRepository materialPrototypeRepository = new MaterialPrototypeRepository("data/specifications.txt", "data/prototypes.txt", "data/feedback.txt");
     private final MaterialPrototypeService materialPrototypeService = new MaterialPrototypeService(sc,
             materialPrototypeRepository);
     private final ProductRepository productRepository = new ProductRepository("data/products.txt");
@@ -41,6 +40,9 @@ public class MainMenu implements Menu {
             productRepository, vendorContractRepository, inventory);
         private final ReportService reportService = new ReportService(
             new util.LogManager("data/salesLogs.txt"));
+    private final model.Schedule schedule = new model.Schedule();
+    private final model.Events events = new model.Events();
+    private final FashionShowService fashionShowService = new FashionShowService(schedule, events, financeService);
 
     @Override
     public MenuOption[] getOptions() {
@@ -53,17 +55,18 @@ public class MainMenu implements Menu {
                 new MenuOption(4, "HR Department", () -> new HRMenu(sc, hr, hrService).start()),
                 new MenuOption(5, "Shipping Department", shipMenu::start),
                 new MenuOption(6, "Marketing Menu",
-                        () -> new MarketingMenu(sc, fashionShowService, campaignService).start()),
+                        () -> new MarketingMenu(sc, campaignService, eventCoordinatorService, fashionShowService).start()),
                 new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, hrService, taskService, reviewService).start()),
-                new MenuOption(8, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
-                new MenuOption(9, "Material Prototype Menu",
+                new MenuOption(8, "Finance Department", () -> new FinanceMenu(sc, financeService, eventCoordinatorService).start()),
+                new MenuOption(9, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
+                new MenuOption(10, "Material Prototype Menu",
                         () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),
-                new MenuOption(10, "Purchase Order Management",
+                new MenuOption(11, "Purchase Order Management",
                         () -> new PurchaseOrderMenu(sc, purchaseOrderService).start()),
-                new MenuOption(0, "Exit", () -> System.out.println("Exiting system..."))
+                new MenuOption(0, "Exit", () -> System.out.println("Goodbye!"))
         };
     }
-
+  
     @Override
     public void start() {
         // Load data before menus

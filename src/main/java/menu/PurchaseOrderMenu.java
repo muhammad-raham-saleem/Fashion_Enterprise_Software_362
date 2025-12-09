@@ -12,10 +12,13 @@ import java.util.Scanner;
 public class PurchaseOrderMenu implements Menu {
     private final Scanner sc;
     private final PurchaseOrderService poService;
+    private final InventoryManager inventoryManager;
 
     public PurchaseOrderMenu(Scanner sc, PurchaseOrderService poService) {
         this.sc = sc;
         this.poService = poService;
+        // Initialize default inventory manager for testing
+        this.inventoryManager = new InventoryManager("Emily Rodriguez", "Warehouse", "Inventory Manager", 72000);
     }
 
     @Override
@@ -37,7 +40,7 @@ public class PurchaseOrderMenu implements Menu {
         int choice;
         do {
             System.out.println("\n=== PURCHASE ORDER MANAGEMENT ===");
-            System.out.println("(Inventory Manager)");
+            System.out.println("Logged in as: " + inventoryManager.getName());
             displayOptions();
 
             while (!sc.hasNextInt()) {
@@ -285,3 +288,4 @@ public class PurchaseOrderMenu implements Menu {
         }
     }
 }
+

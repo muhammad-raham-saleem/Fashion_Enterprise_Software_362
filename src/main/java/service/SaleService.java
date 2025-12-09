@@ -41,7 +41,7 @@ public class SaleService {
         }
 
         inventory.reduceStock(product.getId());
-        finance.addSale(product.getPrice());
+        finance.addRevenue(product.getPrice());
 
         Receipt receipt = new Receipt(product, product.getPrice(), paymentMethod);
         receipt.outputReceipt();

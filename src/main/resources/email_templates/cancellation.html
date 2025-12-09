@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Event Cancelled</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .header { background: #dc3545; color: white; padding: 40px 20px; text-align: center; }
+        .content { padding: 40px 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Event Cancelled</h1>
+        </div>
+        <div class="content">
+            <p>Dear {{CUSTOMER_NAME}},</p>
+            <p>We regret to inform you that <strong>{{EVENT_NAME}}</strong> has been cancelled.</p>
+            <p>If you have already paid, a full refund will be processed within 5-7 business days.</p>
+            <p>We apologize for any inconvenience and look forward to welcoming you at future events.</p>
+        </div>
+    </div>
+</body>
+</html>
+

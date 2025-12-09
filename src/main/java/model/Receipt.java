@@ -15,7 +15,7 @@ public class Receipt {
     private double amount;
     private Date saleDate;
     private String paymentMethod;
-
+    private String customerEmail; // For event invitations
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final String RECEIPT_DIR = "data/receipts/";
 
@@ -49,6 +49,8 @@ public class Receipt {
                 this.amount = Double.parseDouble(amountStr);
             } else if (line.startsWith("Payment Method:")) {
                 this.paymentMethod = line.substring("Payment Method:".length()).trim();
+            } else if (line.startsWith("Customer Email:")) {
+                this.customerEmail = line.substring("Customer Email:".length()).trim();
             }
         }
 
@@ -64,24 +66,41 @@ public class Receipt {
         this.amount = amount;
         this.saleDate = new Date();
         this.paymentMethod = paymentMethod;
+        this.customerEmail = null;
+    }
+
+    public Receipt(Product product, double amount, String paymentMethod, String customerEmail) {
+        this.receiptId = generateReceiptId();
+        this.product = product;
+        this.amount = amount;
+        this.saleDate = new Date();
+        this.paymentMethod = paymentMethod;
+        this.customerEmail = customerEmail;
     }
 
     private String generateReceiptId() {
         return "R" + System.currentTimeMillis();
     }
 
+    @Override
     public String toString() {
-        return "----------RECEIPT----------\n"
-                + "Receipt ID: " + receiptId + "\n"
-                + "Date: " + DATE_FORMAT.format(saleDate) + "\n"
-                + "Product ID: " + product.getId() + "\n"
-                + "Item: " + product.getName() + "\n"
-                + "Price: $" + product.getPrice() + "\n"
-                + "Total Paid: $" + amount + "\n"
-                + "Payment Method: " + paymentMethod + "\n"
-                + "---------------------------\n";
+        StringBuilder sb = new StringBuilder();
+        sb.append("---------------------------\n");
+        sb.append("Receipt ID: ").append(receiptId).append("\n");
+        sb.append("Date: ").append(DATE_FORMAT.format(saleDate)).append("\n");
+        if (product != null) {
+            sb.append("Product ID: ").append(product.getId()).append("\n");
+            sb.append("Item: ").append(product.getName()).append("\n");
+            sb.append("Price: $").append(product.getPrice()).append("\n");
+        }
+        sb.append("Total Paid: $").append(amount).append("\n");
+        sb.append("Payment Method: ").append(paymentMethod).append("\n");
+        if (customerEmail != null && !customerEmail.isEmpty()) {
+            sb.append("Customer Email: ").append(customerEmail).append("\n");
+        }
+        sb.append("---------------------------");
+        return sb.toString();
     }
-
 
     /**
      * Outputs the receipt into the receipts directory
@@ -137,15 +156,20 @@ public class Receipt {
     public static Receipt loadByReceiptId(String receiptId, ProductRepository productRepo) {
         String filepath = RECEIPT_DIR + receiptId + ".txt";
         java.io.File file = new java.io.File(filepath);
-        if (!file.exists()) {
-            return null;
+        if (file.exists()) {
+            return new Receipt(filepath, productRepo);
         }
-        return new Receipt(filepath, productRepo);
+        return null;
     }
 
-    /**
-     * Searches for last line and appends RETURNED
-     */
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
+    }
+
     public boolean markAsReturned() {
         String filepath = RECEIPT_DIR + receiptId + ".txt";
         List<String> lines = FileManager.readLines(filepath);

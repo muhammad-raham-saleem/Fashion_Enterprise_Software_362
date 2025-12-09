@@ -45,8 +45,8 @@ public class FashionShowService {
         String answer = scan.nextLine();
 
         if (answer.equalsIgnoreCase("Y")) {
-            finance.addSale(projectedProfit);
-            System.out.println("Fashion Show completed! Profit Added: " + projectedProfit);
+            finance.addRevenue(projectedProfit);
+            System.out.println("Fashion Show completed! Profit Added: $" + String.format("%.2f", projectedProfit));
         } else {
             System.out.println("Fashion Show completed without simulation.");
         }

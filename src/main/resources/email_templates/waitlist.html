@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Waitlist Notification</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .header { background: #ffc107; color: #000; padding: 40px 20px; text-align: center; }
+        .content { padding: 40px 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>You're on the Waitlist</h1>
+        </div>
+        <div class="content">
+            <p>Dear {{CUSTOMER_NAME}},</p>
+            <p>Thank you for your interest in <strong>{{EVENT_NAME}}</strong>.</p>
+            <p>Unfortunately, the event has reached capacity. You have been added to the waitlist and will be notified if a spot becomes available.</p>
+            <p><strong>Event Details:</strong></p>
+            <ul>
+                <li>Venue: {{EVENT_VENUE}}</li>
+                <li>Date: {{EVENT_DATE}}</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+

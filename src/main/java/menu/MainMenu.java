@@ -56,7 +56,7 @@ public class MainMenu implements Menu {
                 new MenuOption(5, "Shipping Department", shipMenu::start),
                 new MenuOption(6, "Marketing Menu",
                         () -> new MarketingMenu(sc, campaignService, eventCoordinatorService, fashionShowService).start()),
-                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService, reviewService).start()),
+                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, hrService, taskService, reviewService).start()),
                 new MenuOption(8, "Finance Department", () -> new FinanceMenu(sc, financeService, eventCoordinatorService).start()),
                 new MenuOption(9, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
                 new MenuOption(10, "Material Prototype Menu",

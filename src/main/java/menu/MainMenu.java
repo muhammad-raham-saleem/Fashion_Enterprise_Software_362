@@ -54,7 +54,7 @@ public class MainMenu implements Menu {
                 new MenuOption(4, "HR Department", () -> new HRMenu(sc, hr, hrService).start()),
                 new MenuOption(5, "Shipping Department", shipMenu::start),
                 new MenuOption(6, "Marketing Menu",
-                        () -> new MarketingMenu(sc, campaignService, eventCoordinatorService).start()),
+                        () -> new MarketingMenu(sc, campaignService, eventCoordinatorService, fashionShowService).start()),
                 new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService).start()),
                 new MenuOption(8, "Finance Department", () -> new FinanceMenu(sc, financeService, eventCoordinatorService).start()),
                 new MenuOption(9, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
@@ -62,8 +62,6 @@ public class MainMenu implements Menu {
                         () -> new MaterialPrototypeMenu(sc, materialPrototypeService).start()),
                 new MenuOption(11, "Purchase Order Management",
                         () -> new PurchaseOrderMenu(sc, purchaseOrderService).start()),
-                new MenuOption(12, "Fashion Show Management",
-                        () -> new FashionShowMenu(sc, fashionShowService).start()),
                 new MenuOption(0, "Exit", () -> System.out.println("Goodbye!"))
         };
     }

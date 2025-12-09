@@ -315,7 +315,6 @@ public class EventCoordinatorMenu implements Menu {
     private void pullCustomersFromTransactions() {
         System.out.println("\n--- PULL CUSTOMERS FROM TRANSACTIONS ---");
         System.out.println("This feature extracts customer emails from orders and receipts");
-        System.out.println("Note: In production, this would scan actual transaction records");
         System.out.println("\nFeature simulated - customers already in system");
     }
 
@@ -345,7 +344,7 @@ public class EventCoordinatorMenu implements Menu {
 
         if (confirm.equalsIgnoreCase("Y")) {
             int sent = service.sendInvites(event.getId());
-            System.out.println("\n✓ " + sent + " invitation(s) sent!");
+            System.out.println("\n  " + sent + " invitation(s) sent!");
             System.out.println("Emails opened in browser");
         }
     }
@@ -367,13 +366,10 @@ public class EventCoordinatorMenu implements Menu {
         if (!waitlist.isEmpty()) {
             System.out.println("\nWaitlist:");
             for (EventRSVP rsvp : waitlist) {
-                Customer customer = service.getEligibleCustomers().stream()
+                service.getEligibleCustomers().stream()
                         .filter(c -> c.getId() == rsvp.getCustomerId())
-                        .findFirst()
-                        .orElse(null);
-                if (customer != null) {
-                    System.out.println("  - " + customer.getName() + " (party of " + rsvp.getPartySize() + ")");
-                }
+                        .findFirst().ifPresent(customer -> System.out.println("  - "
+                                + customer.getName() + " (party of " + rsvp.getPartySize() + ")"));
             }
         }
 
@@ -428,7 +424,7 @@ public class EventCoordinatorMenu implements Menu {
         if (confirm.equalsIgnoreCase("Y")) {
             boolean success = service.lockEvent(event.getId());
             if (success) {
-                System.out.println("✓ Event locked successfully!");
+                System.out.println("  Event locked successfully!");
             }
         }
     }
@@ -451,7 +447,7 @@ public class EventCoordinatorMenu implements Menu {
     }
 
     private void displayEventSummary(Event event) {
-        System.out.println("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        System.out.println("\n==============================");
         System.out.println("ID: " + event.getId() + " | " + event.getName());
         System.out.println("Status: " + event.getStatus());
         System.out.println("Date: " + event.getDate() + " | Venue: " + event.getVenue());

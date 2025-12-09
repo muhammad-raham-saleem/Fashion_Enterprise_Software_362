@@ -1,6 +1,8 @@
 package menu;
 
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.Date;
 
 import model.Product;
 import model.ProductRepository;
@@ -8,6 +10,7 @@ import service.ProductService;
 import service.ReturnService;
 import service.SaleService;
 import util.LogManager;
+import service.ReportService;
 
 public class SalesMenu implements Menu {
     private final Scanner sc;
@@ -16,11 +19,14 @@ public class SalesMenu implements Menu {
     private final ReturnService returnService;
     private final ProductRepository productRepo = new ProductRepository("data/products.txt");
     private final ProductService ProductService = new ProductService(productRepo, new LogManager("data/productLogs.txt"));
+    private final ReportService reportService;
 
-    public SalesMenu(Scanner sc, SaleService saleService, ReturnService returnService) {
+
+    public SalesMenu(Scanner sc, SaleService saleService, ReturnService returnService, ReportService reportService) {
         this.sc = sc;
         this.saleService = saleService;
         this.returnService = returnService;
+        this.reportService = reportService;
     }
 
     @Override
@@ -29,6 +35,7 @@ public class SalesMenu implements Menu {
                 new MenuOption(1, "Start Sale", this::handleSale),
                 new MenuOption(2, "Update Product Price", this::handleUpdatePrice),
                 new MenuOption(3, "Start Return", this::handleReturn),
+                new MenuOption(4, "Generate Sales Report", this::handleGenerateSalesReport),
                 new MenuOption(0, "Return to Main Menu", () -> System.out.println("Returning to Main Menu..."))
         };
     }
@@ -93,6 +100,13 @@ public class SalesMenu implements Menu {
             return;
         }
         returnService.processReturn(product);
+    }
+
+    public void handleGenerateSalesReport() {
+        System.out.println("Enter date for sales report (YYYY-MM-DD):");
+        LocalDate date = LocalDate.parse(sc.nextLine());
+
+        reportService.generateSalesReport(date);
     }
 }
 

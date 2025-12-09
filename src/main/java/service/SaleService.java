@@ -3,6 +3,7 @@ package service;
 import model.*;
 import util.FileManager;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class SaleService {
@@ -45,6 +46,14 @@ public class SaleService {
         Receipt receipt = new Receipt(product, product.getPrice(), paymentMethod);
         receipt.outputReceipt();
         System.out.println(receipt);
+
+        logSale(product);
+    }
+
+    public void logSale(Product product) {
+        String filePath = "data/salesLogs.txt";
+        String entry = LocalDate.now() + ", " + product.getName() + ", " + product.getPrice();
+        FileManager.appendLine(filePath, entry);
     }
 
     // Will need to be changed once it can fail. Random chance for now

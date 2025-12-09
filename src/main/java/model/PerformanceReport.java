@@ -38,9 +38,9 @@ public class PerformanceReport {
         sb.append("======================================\n");
 
         if (roi > 2.0) {
-            sb.append("Status: Excellent Performance ✓\n");
+            sb.append("Status: Excellent Performance  \n");
         } else if (roi > 1.0) {
-            sb.append("Status: Profitable ✓\n");
+            sb.append("Status: Profitable  \n");
         } else if (roi >= 0.8) {
             sb.append("Status: Break-even ~\n");
         } else {

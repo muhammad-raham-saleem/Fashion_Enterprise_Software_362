@@ -1,1 +1,3 @@
-balance=199.96
+balance=-2050.04
+revenue=0.0
+expenses=2250.0

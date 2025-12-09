@@ -80,7 +80,7 @@ public class EventCoordinatorMenu implements Menu {
         sc.nextLine();
 
         Event event = service.createEvent(name, venue, date, cost, capacity);
-        System.out.println("\n✓ Event created successfully!");
+        System.out.println("\n  Event created successfully!");
         System.out.println("Event ID: " + event.getId());
         System.out.println("Status: " + event.getStatus());
         System.out.println("\nNext step: Submit for financial approval");
@@ -442,7 +442,7 @@ public class EventCoordinatorMenu implements Menu {
 
         if (confirm.equalsIgnoreCase("Y")) {
             service.cancelEvent(event.getId(), reason);
-            System.out.println("✓ Event cancelled");
+            System.out.println("  Event cancelled");
         }
     }
 

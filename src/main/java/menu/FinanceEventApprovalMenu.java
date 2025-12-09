@@ -60,7 +60,7 @@ public class FinanceEventApprovalMenu implements Menu {
         }
 
         for (Event event : pending) {
-            System.out.println("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            System.out.println("\n========================================");
             System.out.println("Event ID: " + event.getId());
             System.out.println("Name: " + event.getName());
             System.out.println("Date: " + event.getDate());
@@ -103,7 +103,7 @@ public class FinanceEventApprovalMenu implements Menu {
         if (confirm.equalsIgnoreCase("Y")) {
             boolean success = eventService.approveEvent(eventId);
             if (success) {
-                System.out.println("✓ Event approved!");
+                System.out.println(" Event approved!");
             }
         }
     }
@@ -141,7 +141,7 @@ public class FinanceEventApprovalMenu implements Menu {
         if (confirm.equalsIgnoreCase("Y")) {
             boolean success = eventService.rejectEvent(eventId, reason);
             if (success) {
-                System.out.println("✓ Event rejected");
+                System.out.println("  Event rejected");
             }
         }
     }

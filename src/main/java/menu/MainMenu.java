@@ -39,6 +39,8 @@ public class MainMenu implements Menu {
     private final PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository("data/purchase_orders.csv");
     private final PurchaseOrderService purchaseOrderService = new PurchaseOrderService(purchaseOrderRepository,
             productRepository, vendorContractRepository, inventory);
+        private final ReportService reportService = new ReportService(
+            new util.LogManager("data/salesLogs.txt"));
 
     @Override
     public MenuOption[] getOptions() {
@@ -47,7 +49,7 @@ public class MainMenu implements Menu {
                         () -> new DesignMenu(sc, sketchService, materialService, manufacturingService, costService,
                                 designRepo).start()),
                 new MenuOption(2, "Warehouse Department", () -> new WarehouseMenu(sc).start()),
-                new MenuOption(3, "Sales Department", () -> new SalesMenu(sc, saleService, returnService).start()),
+                new MenuOption(3, "Sales Department", () -> new SalesMenu(sc, saleService, returnService, reportService).start()),
                 new MenuOption(4, "HR Department", () -> new HRMenu(sc, hr, hrService).start()),
                 new MenuOption(5, "Shipping Department", shipMenu::start),
                 new MenuOption(6, "Marketing Menu",

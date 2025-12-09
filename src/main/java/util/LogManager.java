@@ -4,6 +4,7 @@ package util;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class LogManager {
 
@@ -25,6 +26,11 @@ public class LogManager {
         catch (IOException e) {
             System.out.println("Failed to write logs"); 
         }
+    }
+    
+
+    public List<String> readAllLines(){
+        return FileManager.readLines(logFile);
     }
     
 }

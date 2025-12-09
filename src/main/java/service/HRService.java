@@ -9,7 +9,9 @@ public class HRService {
     private HR hr;
     private Scanner sc;
     private String filename;
-
+    
+    private ReviewService reviewService;
+    
     public HRService (HR hr, Scanner sc, String f) {
         this.hr = hr;
         this.sc = sc;
@@ -17,15 +19,18 @@ public class HRService {
         loadStaff();
     }
 
+    public void addReviewService (ReviewService rs) {
+        reviewService = rs;
+    }
+
     public void viewStaffList() {
 
         if (this.hr.getStaff().isEmpty()) System.out.println("No staff hired.");
         else {
-            for (Staff s : this.hr.getStaff()) {
-                System.out.println("Name: " + s.getName());
-                System.out.println("Department: " + s.getDepartment());
-                System.out.println("Role: " + s.getRole());
-                System.out.println("Salary: " + s.getSalary());
+            for (int i=hr.getStaff().size(); i>0; i--) {
+                Staff s = hr.getStaffById(i);
+                System.out.println(s.getID() + ": " + s.getName() + " (" + s.getDepartment() + ")");
+                System.out.println("Role: " + s.getRole() + ", Salary: $" + s.getSalary() + "\n");
             }
         }
         
@@ -64,10 +69,13 @@ public class HRService {
 
     private void saveStaff() {
         List<String> lines = new ArrayList<>();
-        lines.add("name, department, role, salary");
+        lines.add("name, id, department, role, salary, isManager, manager");
 
         for (Staff s : this.hr.getStaff()){
-            lines.add(s.getName() + ", " + s.getDepartment() + ", " + s.getRole() + ", " + s.getSalary());
+            String line = s.getName() + ", " + s.getID() + ", " + s.getDepartment() + ", " + s.getRole() + ", " + s.getSalary();
+            if (s instanceof Manager) line += ", true";
+            else line += ", false, " + s.getManager().getID();
+            lines.add(line);
         }
         FileManager.writeLines(filename, lines);
     }
@@ -95,6 +103,91 @@ public class HRService {
                 man.addEmployee(newStaff);
             }
         } 
+    }
+
+    public void sendReview (EmployeeReview r) {
+        hr.addReview(r);
+    }
+
+    public void approveReview () {
+
+        List<EmployeeReview> reviews = hr.getReviews();
+        
+        int choice = 0;
+        do {
+
+            System.out.println("\n--- REVIEWS ---");
+            if (reviews.isEmpty()) System.out.println("There are no reviews.");
+
+            for (int i=1; i<=reviews.size(); i++) {
+
+                EmployeeReview current = reviews.get(i-1);
+                System.out.print(i + ". Review for " + current.getReviewee().getName());
+                System.out.print(", " + current.getDateTime());
+                System.out.println(" (AWAITING APPROVAL)");
+
+            }
+
+            //Next steps
+            System.out.println("\nEnter Review Number to approve/disapprove.");
+            System.out.println("Or Type 0 to Go Back.");
+
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+
+            if (choice == 0) System.out.println("Returning...");
+            else if (choice < reviews.size()+1) {
+                EmployeeReview review = reviews.get(choice-1);
+                answerReview(review);
+            }
+            else System.out.println("Invalid option.");
+
+        } while (choice > 0 && choice < reviews.size()+1);
+
+    }
+
+    private void answerReview (EmployeeReview review) {
+
+        int choice;
+        //Begin selection of task to accept
+        do {
+            System.out.println("1: Approve Review");
+            System.out.println("2: Disapprove Review");
+            System.out.println("0: Cancel");
+            System.out.print("Choose an option: ");
+
+            while (!sc.hasNextInt()) {
+                System.out.print("Enter a valid number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1 -> {
+                    review.approve();
+                    hr.getReviews().remove(review);
+                    review.getReviewee().addReview(review);
+                    saveStaff();
+                    //Success message
+                    System.out.println("Successfully approved review.");
+                }
+                case 2 -> {
+                    hr.getReviews().remove(review);
+                    reviewService.deleteReview(review);
+                    //Success message
+                    System.out.println("Successfully disapproved review.");
+                }
+                case 0 -> System.out.println("Returning...");
+                default -> System.out.println("Invalid option.");
+            }
+
+        } while (choice < 0);
+
+        reviewService.saveReviews();
+
     }
 
 }

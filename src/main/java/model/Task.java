@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 
 public class Task {
 
+    private static int count = 1;
+    private int task_id;
+
     private Manager creator; //Manager who created the task
     private Staff assignee; //Staff member assigned to the task
 
@@ -31,6 +34,10 @@ public class Task {
         completed = false;
         accepted = false;
 
+        //Assign unique task ID
+        task_id = count;
+        count++;
+
     }
 
     //Constructor for loading task from file, takes all variables as input
@@ -47,9 +54,16 @@ public class Task {
         this.comments = comments;
         this.submitDateTime = subDateTime;
 
+        //Assign unique task ID
+        task_id = count;
+        count++;
+
     }
 
     //Getters
+    public int getID() {
+        return task_id;
+    }
     public Manager getCreator() {
         return creator;
     }
@@ -123,7 +137,6 @@ public class Task {
         completed = true;
         this.comments = comments;
         this.submitDateTime = subDateTime;
-        assignee.removeTask(this);
     }
 
     //Set task's accepted status

@@ -21,6 +21,8 @@ public class HRMenu implements Menu {
         return new MenuOption[] {
             new MenuOption(1, "View Staff List", hrService::viewStaffList),
             new MenuOption(2, "Hire Staff", hrService::hireStaff),
+            //new MenuOption(3, "View Pending Employee Performance Reviews", hrService::viewReviews),
+            new MenuOption(3, "Approve/Disapprove Employee Performance Review", hrService::approveReview),
             new MenuOption(0, "Return to Main Menu", () -> System.out.println("Returning to Main Menu..."))
         };
     }

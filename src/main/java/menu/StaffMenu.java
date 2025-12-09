@@ -1,24 +1,33 @@
 package menu;
 
 import java.util.Scanner;
+
 import model.*;
+import service.HRService;
+import service.ReviewService;
 import service.TaskService;
 
 public class StaffMenu {
 
     private final Scanner sc;
     private final HR hr;
+    private final HRService hrService;
     private final TaskService taskService;
+    private final ReviewService reviewService;
 
     private Staff user; //Staff member using the menu
 
-    public StaffMenu (Scanner sc, HR hr, TaskService ts) {
+    public StaffMenu (Scanner sc, HR hr, HRService hrs, TaskService ts, ReviewService rs) {
         this.sc = sc;
         this.hr = hr;
+        hrService = hrs;
         taskService = ts;
+        reviewService = rs;
     }
 
     public void start() {
+
+        hrService.viewStaffList();
 
         //Enter employee ID to identify who is doing the action
         System.out.print("Enter your employee ID: ");
@@ -45,6 +54,7 @@ public class StaffMenu {
             System.out.println("1. View Your Tasks");
             System.out.println("2. Accept or Decline Pending Task");
             System.out.println("3. Complete Task");
+            System.out.println("4. View Your Employee Reviews");
             System.out.println("0. Cancel");
             System.out.print("Choose an option: ");
 
@@ -58,6 +68,7 @@ public class StaffMenu {
                 case 1 -> taskService.viewTasks(user);
                 case 2 -> taskService.answerTask(user);
                 case 3 -> taskService.completeTask(user);
+                case 4 -> reviewService.viewReviews(user);
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }
@@ -78,6 +89,8 @@ public class StaffMenu {
             System.out.println("2. Create New Task");
             System.out.println("3. Assign Task to Employee");
             System.out.println("4. Unassign/Cancel Task");
+            System.out.println("5. View Your Employee Reviews");
+            System.out.println("6. Conduct Employee Performance Review");
             System.out.println("0. Cancel");
             System.out.print("Choose an option: ");
 
@@ -92,6 +105,8 @@ public class StaffMenu {
                 case 2 -> taskService.createTask(user_m);
                 case 3 -> taskService.beginAssignment(user_m);
                 case 4 -> taskService.cancelTask(user_m);
+                case 5 -> reviewService.viewReviews(user_m);
+                case 6 -> reviewService.conductReview(user_m);
                 case 0 -> System.out.println("Returning...");
                 default -> System.out.println("Invalid option.");
             }

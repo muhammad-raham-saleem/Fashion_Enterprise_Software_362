@@ -7,9 +7,15 @@ public class HR {
     //Hash map that maps each staff's unique ID to their object.
     private Map<Integer, Staff> staffList = new HashMap<>();
 
+    private List<EmployeeReview> reviews = new ArrayList<>();
+
     //Get every staff member in the HR system.
     public Collection<Staff> getStaff () {
         return staffList.values();
+    }
+
+    public List<EmployeeReview> getReviews() {
+        return reviews;
     }
 
     //Return a specific staff member by their unique ID.
@@ -20,6 +26,10 @@ public class HR {
     //Add staff member to map
     public void addStaff (Staff s) {
         staffList.put(s.getID(), s);
+    }
+
+    public void addReview (EmployeeReview r) {
+        reviews.add(r);
     }
 
 }

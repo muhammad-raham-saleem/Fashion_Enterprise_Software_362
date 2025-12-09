@@ -22,6 +22,7 @@ public class MainMenu implements Menu {
     private final HR hr = new HR();
     private final HRService hrService = new HRService(hr, sc, "data/staff.txt");
     private final TaskService taskService = new TaskService(hr, sc, "data/tasks.txt");
+    private final ReviewService reviewService = new ReviewService(sc, "data/reviews.txt", hr, hrService, taskService);
     private final ShippingDepartmentMenu shipMenu = new ShippingDepartmentMenu(sc);
     private final CampaignService campaignService = new CampaignService(sc);
     private final model.EventRepository eventRepository = new model.EventRepository("data/events.csv");
@@ -55,7 +56,7 @@ public class MainMenu implements Menu {
                 new MenuOption(5, "Shipping Department", shipMenu::start),
                 new MenuOption(6, "Marketing Menu",
                         () -> new MarketingMenu(sc, campaignService, eventCoordinatorService, fashionShowService).start()),
-                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService).start()),
+                new MenuOption(7, "Staff Menu", () -> new StaffMenu(sc, hr, taskService, reviewService).start()),
                 new MenuOption(8, "Finance Department", () -> new FinanceMenu(sc, financeService, eventCoordinatorService).start()),
                 new MenuOption(9, "Vendor Contract", () -> new VendorContractMenu(sc, vendorContractService).start()),
                 new MenuOption(10, "Material Prototype Menu",
@@ -65,6 +66,7 @@ public class MainMenu implements Menu {
                 new MenuOption(0, "Exit", () -> System.out.println("Goodbye!"))
         };
     }
+  
     @Override
     public void start() {
         // Load data before menus

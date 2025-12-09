@@ -27,7 +27,8 @@ public class HRService {
 
         if (this.hr.getStaff().isEmpty()) System.out.println("No staff hired.");
         else {
-            for (Staff s : this.hr.getStaff()) {
+            for (int i=hr.getStaff().size(); i>0; i--) {
+                Staff s = hr.getStaffById(i);
                 System.out.println(s.getID() + ": " + s.getName() + " (" + s.getDepartment() + ")");
                 System.out.println("Role: " + s.getRole() + ", Salary: $" + s.getSalary() + "\n");
             }

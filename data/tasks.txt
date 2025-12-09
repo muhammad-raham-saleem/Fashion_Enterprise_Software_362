@@ -6,18 +6,20 @@ DESCRIPTION ~ We need new designs for our upcoming collection.
 DEADLINE ~ 2025-11-25T16:10
 ACCEPTED ~ true
 COMPLETED ~ true
-COMMENTS ~ poopy
+COMMENTS ~ good job.
 SUBMIT_DATETIME ~ 2025-12-08T03:12:53.099996700
 END TASK
 
 BEGIN TASK
 CREATOR_ID ~ 1
-ASSIGNEE_ID ~ 4
+ASSIGNEE_ID ~ 2
 NAME ~ Review new design sketches
 DESCRIPTION ~ We have some new sketches made and I'm curious if there are any improvements you think would be benefitial.
 DEADLINE ~ 2025-11-24T17:00
 ACCEPTED ~ false
-COMPLETED ~ false
+COMPLETED ~ true
+COMMENTS ~ good job.
+SUBMIT_DATETIME ~ 2025-12-05T03:12:53.099996700
 END TASK
 
 BEGIN TASK

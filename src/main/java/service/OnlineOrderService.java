@@ -107,6 +107,19 @@ public class OnlineOrderService {
         }
     }
 
+    // expose order lookup to other services
+public OnlineOrder getOrderById(String id) {
+    for (OnlineOrder o : orders) {
+        if (o.getId().equalsIgnoreCase(id)) return o;
+    }
+    return null;
+}
+
+// expose saving so PickListService can persist status changes
+public void saveOrders() {
+    saveOrdersToCsv(); // call your existing private method
+}
+
     public void fulfillOnlineOrder() {
         System.out.println("\n=== Fulfill Online Order ===");
 

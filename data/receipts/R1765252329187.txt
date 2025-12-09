@@ -1,0 +1,9 @@
+----------RECEIPT----------
+Receipt ID: R1765252329187
+Date: 2025-12-08 21:52:09
+Product ID: 1
+Item: Designer Shirt
+Price: $49.99
+Total Paid: $49.99
+Payment Method: Cash
+---------------------------

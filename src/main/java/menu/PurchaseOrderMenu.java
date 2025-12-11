@@ -161,18 +161,75 @@ public class PurchaseOrderMenu implements Menu {
             return;
         }
 
-        // Step 8: Enter unit cost
-        System.out.print("Enter unit cost per item (e.g., 12.99): $");
-        double unitCost = sc.nextDouble();
-        sc.nextLine();
+        // Step 8: Enter unit cost with vendor catalog pricing
+        System.out.println("\n=== PRICING INFORMATION ===");
+        System.out.println("Product Retail Price: $" + String.format("%.2f", product.getPrice()));
+
+        // Get vendor's catalog price for this product
+        Double catalogPrice = contract != null ? contract.getCatalogPrice(productId) : null;
+        double unitCost;
+
+        if (catalogPrice != null) {
+            System.out.println("Vendor Catalog Price: $" + String.format("%.2f", catalogPrice));
+            System.out.print("\nAccept vendor price? (y/n) or enter custom price: ");
+            String priceChoice = sc.nextLine().trim().toLowerCase();
+
+            if (priceChoice.equals("y") || priceChoice.equals("yes")) {
+                unitCost = catalogPrice;
+                System.out.println("Using vendor catalog price: $" + String.format("%.2f", unitCost));
+            } else if (priceChoice.equals("n") || priceChoice.equals("no")) {
+                System.out.print("Enter negotiated unit cost: $");
+                unitCost = sc.nextDouble();
+                sc.nextLine();
+            } else {
+                // Try to parse as a number
+                try {
+                    unitCost = Double.parseDouble(priceChoice);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Using vendor catalog price.");
+                    unitCost = catalogPrice;
+                }
+            }
+        } else {
+            System.out.println("(No catalog price set - enter negotiated wholesale price)");
+            System.out.print("Enter unit cost per item (wholesale/vendor price): $");
+            unitCost = sc.nextDouble();
+            sc.nextLine();
+        }
 
         if (unitCost <= 0) {
             System.out.println("\nError: Unit cost must be greater than zero.");
             return;
         }
 
+        // Profit calculation and warnings
         double totalCost = quantity * unitCost;
+        double unitProfit = product.getPrice() - unitCost;
+        double potentialProfit = unitProfit * quantity;
+        double profitMarginPercent = (unitProfit / product.getPrice()) * 100;
+
+        System.out.println("\n=== COST ANALYSIS ===");
         System.out.printf("Total Cost: $%.2f%n", totalCost);
+        System.out.printf("Potential Profit: $%.2f (Unit: $%.2f)%n", potentialProfit, unitProfit);
+        System.out.printf("Profit Margin: %.1f%%%n", profitMarginPercent);
+
+        // Business validation warnings
+        if (unitCost >= product.getPrice()) {
+            System.out.println("\n⚠️  WARNING: Unit cost ($" + String.format("%.2f", unitCost) +
+                             ") equals or exceeds retail price ($" + String.format("%.2f", product.getPrice()) + ")!");
+            System.out.println("This would result in NO PROFIT or a LOSS!");
+            System.out.print("Continue anyway? (y/n): ");
+            String confirm = sc.nextLine().trim().toLowerCase();
+            if (!confirm.equals("y") && !confirm.equals("yes")) {
+                System.out.println("Order cancelled due to unprofitable pricing.");
+                return;
+            }
+        } else if (profitMarginPercent < 30) {
+            System.out.println("\n⚠️  Warning: Low profit margin (" + String.format("%.1f", profitMarginPercent) + "%)");
+            System.out.println("Standard margin target: 30-50%");
+        } else {
+            System.out.println("✓ Healthy profit margin");
+        }
 
         // Step 9: Enter expected delivery date
         System.out.print("Enter expected delivery date (YYYY-MM-DD) [default: 7 days from today]: ");

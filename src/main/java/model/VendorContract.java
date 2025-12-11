@@ -1,5 +1,8 @@
 package model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class VendorContract {
     private static int count = 1;
 
@@ -11,6 +14,7 @@ public class VendorContract {
     private double budgetAmount;
     private String financeNotes;
     private String legalNotes;
+    private Map<Integer, Double> catalogPrices; // productId -> vendor price
 
     public VendorContract(Vendor vendor, String pricingTerms, String sustainabilityReqs, double budgetAmount) {
         this.contractID = count++;
@@ -21,6 +25,19 @@ public class VendorContract {
         this.status = "Pending";
         this.financeNotes = "";
         this.legalNotes = "";
+        this.catalogPrices = new HashMap<>();
+    }
+
+    public void setCatalogPrice(int productId, double price) {
+        catalogPrices.put(productId, price);
+    }
+
+    public Double getCatalogPrice(int productId) {
+        return catalogPrices.get(productId);
+    }
+
+    public Map<Integer, Double> getCatalogPrices() {
+        return new HashMap<>(catalogPrices);
     }
 
     public int getContractID() {
@@ -80,7 +97,14 @@ public class VendorContract {
     }
 
     public String toCSV() {
-        return String.format("%d,%d,%s,%s,%s,%.2f,%s,%s",
+        // Serialize catalog prices as "productId:price;productId:price"
+        StringBuilder catalogStr = new StringBuilder();
+        for (Map.Entry<Integer, Double> entry : catalogPrices.entrySet()) {
+            if (catalogStr.length() > 0) catalogStr.append(";");
+            catalogStr.append(entry.getKey()).append(":").append(String.format("%.2f", entry.getValue()));
+        }
+
+        return String.format("%d,%d,%s,%s,%s,%.2f,%s,%s,%s",
                 contractID,
                 vendor.getVendorID(),
                 escapeCsv(status),
@@ -88,11 +112,12 @@ public class VendorContract {
                 escapeCsv(sustainabilityReqs),
                 budgetAmount,
                 escapeCsv(financeNotes),
-                escapeCsv(legalNotes));
+                escapeCsv(legalNotes),
+                escapeCsv(catalogStr.toString()));
     }
 
     public static VendorContract fromCSV(String line, java.util.List<Vendor> vendors) {
-        String[] parts = line.split(",", 8);
+        String[] parts = line.split(",", 9);
         if (parts.length < 8) return null;
         try {
             int contractId = Integer.parseInt(parts[0]);
@@ -103,6 +128,7 @@ public class VendorContract {
             double budget = Double.parseDouble(parts[5]);
             String financeNotes = unescapeCsv(parts[6]);
             String legalNotes = unescapeCsv(parts[7]);
+            String catalogPricesStr = parts.length > 8 ? unescapeCsv(parts[8]) : "";
 
             // Find vendor
             Vendor vendor = vendors.stream()
@@ -120,6 +146,21 @@ public class VendorContract {
             contract.status = status;
             contract.financeNotes = financeNotes;
             contract.legalNotes = legalNotes;
+
+            // Parse catalog prices "productId:price;productId:price"
+            if (!catalogPricesStr.isEmpty()) {
+                String[] priceEntries = catalogPricesStr.split(";");
+                for (String entry : priceEntries) {
+                    String[] parts2 = entry.split(":");
+                    if (parts2.length == 2) {
+                        try {
+                            int productId = Integer.parseInt(parts2[0]);
+                            double price = Double.parseDouble(parts2[1]);
+                            contract.setCatalogPrice(productId, price);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                }
+            }
 
             // Update static counter
             if (contractId >= count) {

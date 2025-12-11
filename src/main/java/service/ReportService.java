@@ -39,7 +39,7 @@ public class ReportService {
             List<String> report = new ArrayList<>();
             report.add("Daily Sales Report for " + date);
             report.add("----------------------------");
-            report.add("total Sales: " + dailySales.size());
+            report.add("Total Sales: " + dailySales.size());
             report.add(String.format("Total Revenue: $%.2f", totalRevenue));
             report.add("\nDetailed Sales:");
             if (dailySales.isEmpty()){
@@ -48,6 +48,7 @@ public class ReportService {
             else {
                 report.addAll(dailySales);
             }
+            System.out.println(String.join("\n", report));
             String fileName = "data/SalesReports/Sales_report_" + date + ".txt";
             FileManager.writeLines(fileName, report);
 
